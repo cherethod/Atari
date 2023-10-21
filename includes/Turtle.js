@@ -19,8 +19,6 @@ class Turtle extends Monster {
     this.direction = 1 // 1 derecha 0 izquierda
   }
 
-
-  }
   draw () {
     this.ctx.fillStyle = 'green'
     this.ctx.fillRect(this.position.x, this.position.y, this.width, this.height)
