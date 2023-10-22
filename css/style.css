@@ -23,13 +23,13 @@ body {
   width: 100%;
   height: 100%;
   background-color: transparent;
-  background: url('../resources/tv5.png');
+  background: url('../resources/tv.png');
   z-index: 3;
 
 }
 
 .container > .canvas__container {
-  background-color: rgb(31, 31, 31);
+  background-color: #000;
   position: absolute;
   top: 60px;
   left: 46px;
@@ -49,8 +49,8 @@ body {
 }
 
 .container > .canvas__container > #canvas {
-  width: 605px;
-  height: 450px;
+  width: 512px;
+  height: 448px;
 }
 
 .container > .btn__power {

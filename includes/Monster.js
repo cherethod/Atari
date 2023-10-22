@@ -1,5 +1,5 @@
 class Monster {
-  constructor(canvas, ctx, position, sprite, player) {
+  constructor(canvas, ctx, position, sprite) {
     this.canvas = canvas
     this.ctx = ctx
     this.position = position
@@ -8,7 +8,6 @@ class Monster {
       x: 10,
       y: 1,
     }
-    this.player = player
 
   }
 }
