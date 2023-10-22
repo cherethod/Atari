@@ -32,7 +32,7 @@ const mario = new Mario(canvas, ctx, {
 }, marioSprite);
 
 const turtle1 = new Turtle(canvas, ctx, {
-  x: 150, 
+  x: canvas.width - 130, 
   y: 50
 })
 
@@ -61,8 +61,8 @@ function animate() {
 
 // TODO -> JOEL ARREGLAR ESTA
 function checkCollision () {
-  console.log(`Mario X -> ${mario.position.x} - Turtle X -> ${turtle1.position.x} \n 
-  Mario Y -> ${mario.position.y} - Turtle Y -> ${turtle1.position.y} `);
+  // console.log(`Mario X -> ${mario.position.x} - Turtle X -> ${turtle1.position.x} \n 
+  // Mario Y -> ${mario.position.y} - Turtle Y -> ${turtle1.position.y} `);
   if (
     turtle1.position.x - turtle1.width == mario.position.x 
     && turtle1.position.y - (mario.height)== mario.position.y ||
