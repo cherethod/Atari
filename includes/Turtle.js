@@ -7,8 +7,8 @@ class Turtle extends Monster {
     this.position = position
     this.canvas = canvas
     this.ctx = ctx
-    this.width = 16
-    this.height = 16
+    this.width = 32
+    this.height = 32
     this.velocity = {
       x: 1,
       y: 1,

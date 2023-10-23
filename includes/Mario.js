@@ -5,8 +5,8 @@ class Mario {
     this.position = position;
     this.canvas = canvas;
     this.ctx = ctx;
-    this.width = 16;
-    this.height = 23;
+    this.width = 32;
+    this.height = 46;
     this.velocity = {
       x: 0,
       y: 1,

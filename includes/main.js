@@ -62,6 +62,19 @@ function animate() {
 
 // TODO -> JOEL ARREGLAR ESTA
 function checkCollision () {
+  if (turtle1.direction === 0) {
+    const turtleHitBoxStart = turtle1.position.x
+    const turtleHitBoxEnd = turtle1.position.x + (0.4 * turtle1.width)
+    if (mario.position.x + mario.width > turtleHitBoxStart && mario.position.x < turtleHitBoxEnd)   {
+      alert('hit desde derecha')
+    }
+  } else if (turtle1.direction === 1) {
+    const turtleHitBoxStart = turtle1.position.x + (0.6 * turtle1.width)
+    const turtleHitBoxEnd = turtle1.position.x + turtle1.width
+    if (mario.position.x + turtle1.width > turtleHitBoxStart && mario.position.x < turtleHitBoxEnd) {
+      alert('hit desde izquierda')
+    }
+  }
   // console.log(`Mario X -> ${mario.position.x} - Turtle X -> ${turtle1.position.x} \n 
   // Mario Y -> ${mario.position.y} - Turtle Y -> ${turtle1.position.y} `);
 
@@ -122,7 +135,7 @@ window.addEventListener('keydown', (e) => {
   case 'Space' :
     if (!pressedKeys.left.pressed)  mario.setAnimation('jump')
     pressedKeys.space.pressed = true
-    if (mario.isOverFloor()) mario.velocity.y = -5     
+    if (mario.isOverFloor()) mario.velocity.y = -7.2     
     break;
     // * TEST STAGE UPDATE
   case 'F1':
