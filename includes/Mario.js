@@ -15,7 +15,8 @@ class Mario {
     // this.spriteHeight = 21;
     // this.spriteWidth = 18;
     this.animations = {
-      'idle': [{ x: 0, y: 0 }],
+      'idleRight': [{ x: 0, y: 0 }],
+      'idleLeft': [{ x: this.width * 19, y: 0 }],
       'runRight': [
         // { x: 0, y: 0 },
         { x: this.width, y: 0 },
@@ -28,14 +29,16 @@ class Mario {
         { x: this.width * 17, y: 0 },
         { x: this.width * 16, y: 0 },
       ],
-      'jump': [{x: this.width * 4, y: 0}],
+      'jumpRight': [{x: this.width * 4, y: 0}],
+      'jumpLeft': [{x: this.width * 15, y: 0}],
       'stop': [{x: this.width * 5, y: 0}],
       'fall': [{x: this.width * 7, y: 0}],
     };
     this.frameIndex = 0;
-    this.currentAnimation = 'idle'
+    this.currentAnimation = 'idleRight'
     this.animationSpeed = 5
     this.animationCounter = 0
+    this.direction = 1 // 1 right  -  0 left
   }
 
   updateAnimation() {

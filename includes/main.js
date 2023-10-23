@@ -100,8 +100,10 @@ if (
 
   if (
     !pressedKeys.left.pressed && !pressedKeys.right.pressed 
-    && !pressedKeys.space.pressed && mario.isOverFloor()) mario.setAnimation('idle')
-
+    && !pressedKeys.space.pressed && mario.isOverFloor() && mario.direction == 1) mario.setAnimation('idleRight')
+    else if (
+      !pressedKeys.left.pressed && !pressedKeys.right.pressed 
+      && !pressedKeys.space.pressed && mario.isOverFloor() && mario.direction == 0) mario.setAnimation('idleLeft')
 }
 
 
@@ -124,16 +126,18 @@ window.addEventListener('keydown', (e) => {
   // console.log(e.code);
  switch (e.code) {
   case (keyboardType = 1) ? 'KeyA': 'ArrowLeft' :
-  if (!pressedKeys.left.pressed)  mario.setAnimation('runLeft')
-  pressedKeys.left.pressed = true
-    
+    if (!pressedKeys.left.pressed)  mario.setAnimation('runLeft')
+    pressedKeys.left.pressed = true
+    mario.direction = 0    
     break;
   case (keyboardType = 1) ? 'KeyD': 'ArrowRight' :
     if (!pressedKeys.right.pressed)  mario.setAnimation('runRight')    
     pressedKeys.right.pressed = true        
+    mario.direction = 1
     break;
   case 'Space' :
-    if (!pressedKeys.left.pressed)  mario.setAnimation('jump')
+    if (!pressedKeys.space.pressed && mario.direction == 0)  mario.setAnimation('jumpLeft')
+    if (!pressedKeys.space.pressed && mario.direction == 1)  mario.setAnimation('jumpRight')
     pressedKeys.space.pressed = true
     if (mario.isOverFloor()) mario.velocity.y = -7.2     
     break;
