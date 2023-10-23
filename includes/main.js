@@ -49,11 +49,12 @@ function animate() {
   ctx.fillRect(0, 0, canvas.width, canvas.height)
   stage.update()
   mario.update()
+  mario.updateAnimation()
   turtle1.update()
 
   mario.velocity.x = 0
-  if (pressedKeys.left.pressed) mario.velocity.x = -1
-  else if (pressedKeys.right.pressed) mario.velocity.x = 1
+  if (pressedKeys.left.pressed && mario.position.x > 0) mario.velocity.x = -1
+  else if (pressedKeys.right.pressed && mario.position.x < canvas.width - mario.width) mario.velocity.x = 1
 
   checkCollision()
 }
@@ -63,14 +64,31 @@ function animate() {
 function checkCollision () {
   // console.log(`Mario X -> ${mario.position.x} - Turtle X -> ${turtle1.position.x} \n 
   // Mario Y -> ${mario.position.y} - Turtle Y -> ${turtle1.position.y} `);
+
+  // console.log(`
+  // Posicion X Mario -> ${mario.position.x}\n
+  // Posicion X Tortuga -> ${turtle1.position.x}\n
+  // Diferencia posiciones -> ${mario.position.x - turtle1.position.x - turtle1.width}\n
+  // `)
+  // if (
+  //   turtle1.direction == 0 && turtle1.position.y - (mario.height - turtle1.height) == mario.position.y &&
+  //   ((mario.position.x ) - (turtle1.position.x - mario.width)) >= 0 && (mario.position.x - turtle1.position.x + mario.width) <= turtle1.width / 4 
+  // ) console.log('colision tortuga hacia izquierda')
+  // if (
+  //   turtle1.direction == 1 && turtle1.position.y - (mario.height - turtle1.height) == mario.position.y &&
+  //   // ((turtle1.position.x + turtle1.width) - mario.position.x) <= 0 && (mario.position.x - turtle1.position.x + mario.width) <= turtle1.width / 4 
+  //   turtle1.position.x == mario.position.x - turtle1.width /*&& (mario.position.x - turtle1.position.x + turtle1.width) >= mario.width /4 * -1*/
+  // ) console.log('colision tortuga hacia derecha')
+if (
+  mario.position.x + mario.width >= turtle1.position.x &&
+  mario.position.x <= turtle1.position.x + turtle1.width &&
+  mario.position.y == turtle1.position.y
+  ) console.log('collision')
+
   if (
-    turtle1.position.x - turtle1.width == mario.position.x 
-    && turtle1.position.y - (mario.height)== mario.position.y ||
-    turtle1.position.x + turtle1.width == mario.position.x 
-    && turtle1.position.y - (mario.height)== mario.position.y
-    ) {
-    alert()
-  }
+    !pressedKeys.left.pressed && !pressedKeys.right.pressed 
+    && !pressedKeys.space.pressed && mario.isOverFloor()) mario.setAnimation('idle')
+
 }
 
 
@@ -82,6 +100,9 @@ const pressedKeys = {
   right: {
     pressed: false,
   },
+  space: {
+    pressed: false
+  }
 }
 
 //  * LISTENERS
@@ -90,17 +111,22 @@ window.addEventListener('keydown', (e) => {
   // console.log(e.code);
  switch (e.code) {
   case (keyboardType = 1) ? 'KeyA': 'ArrowLeft' :
-    pressedKeys.left.pressed = true
+  if (!pressedKeys.left.pressed)  mario.setAnimation('runLeft')
+  pressedKeys.left.pressed = true
+    
     break;
   case (keyboardType = 1) ? 'KeyD': 'ArrowRight' :
-    pressedKeys.right.pressed = true    
+    if (!pressedKeys.right.pressed)  mario.setAnimation('runRight')    
+    pressedKeys.right.pressed = true        
     break;
   case 'Space' :
-    (mario.isOverFloor()) ? mario.velocity.y = -5 : null
+    if (!pressedKeys.left.pressed)  mario.setAnimation('jump')
+    pressedKeys.space.pressed = true
+    if (mario.isOverFloor()) mario.velocity.y = -5     
     break;
     // * TEST STAGE UPDATE
   case 'F1':
-    console.log(stage.currentStage++);
+    // console.log(stage.currentStage++);
     stage.currentStage = (stage.currentStage > 3) ? 1 : stage.currentStage++
     stage.image.src = stage.stages[stage.currentStage]
     break
@@ -113,10 +139,15 @@ window.addEventListener('keyup', (e) => {
  switch (e.code) {
   case (keyboardType = 1) ? 'KeyA': 'ArrowLeft' :
     pressedKeys.left.pressed = false
+    // mario.setAnimation('idle')
     break;
   case (keyboardType = 1) ? 'KeyD': 'ArrowRight' :
     pressedKeys.right.pressed = false    
-    break;
+    // mario.setAnimation('idle')
+    break
+  case 'Space': 
+      pressedKeys.space.pressed = false
+      // (mario.isOverFloor()) ? mario.setAnimation('idle') : null
   default:
     break;
  }

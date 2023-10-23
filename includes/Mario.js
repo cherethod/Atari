@@ -5,8 +5,8 @@ class Mario {
     this.position = position;
     this.canvas = canvas;
     this.ctx = ctx;
-    this.width = 18;
-    this.height = 21;
+    this.width = 16;
+    this.height = 23;
     this.velocity = {
       x: 0,
       y: 1,
@@ -15,24 +15,57 @@ class Mario {
     // this.spriteHeight = 21;
     // this.spriteWidth = 18;
     this.animations = {
-      idle: [{ x: 0, y: 0 }],
-      run: [
-        {x: this.width, y: 0 },
-        {x: this.width * 2, y: 0 },
-        {x: this.width * 3, y: 0 },
+      'idle': [{ x: 0, y: 0 }],
+      'runRight': [
+        // { x: 0, y: 0 },
+        { x: this.width, y: 0 },
+        { x: this.width * 2, y: 0 },
+        { x: this.width * 3, y: 0 },
       ],
-      jump: [{x: this.width * 4, y: 0}],
-      stop: [{x: this.width * 5, y: 0}],
-      fall: [{x: this.width * 7, y: 0}],
+      'runLeft': [
+        // { x: this.width * 19, y: 0 },
+        { x: this.width * 18, y: 0 },
+        { x: this.width * 17, y: 0 },
+        { x: this.width * 16, y: 0 },
+      ],
+      'jump': [{x: this.width * 4, y: 0}],
+      'stop': [{x: this.width * 5, y: 0}],
+      'fall': [{x: this.width * 7, y: 0}],
     };
     this.frameIndex = 0;
+    this.currentAnimation = 'idle'
+    this.animationSpeed = 5
+    this.animationCounter = 0
+  }
+
+  updateAnimation() {
+    // console.log(this.animations[this.currentAnimation].length);
+    // console.log(`current animation -> ${this.currentAnimation}\n
+    // current frameindex -> ${this.frameIndex}`);
+
+    let animation = this.animations[this.currentAnimation];
+    if (animation) {
+      this.animationCounter++;
+      if (this.animationCounter >= this.animationSpeed) {
+        this.animationCounter = 0;
+        this.frameIndex = (this.frameIndex + 1) % animation.length;
+      }
+    }
+    // console.log(animation);
+  }
+
+  setAnimation (animationName) {
+    this.frameIndex = 0
+    this.currentAnimation = animationName
+    this.animationCounter = 0
   }
 
   draw() {
-    this.ctx.drawImage(
+  // this.updateAnimation()
+  this.ctx.drawImage(
       this.marioSprite, // This is the sprite
-      0, // Position X in the sprite
-      0, // Position Y in the sprite
+      this.animations[this.currentAnimation][this.frameIndex].x, // Position X in the sprite
+      this.animations[this.currentAnimation][this.frameIndex].y, // Position Y in the sprite
       this.width, // Sprite width
       this.height, // Sprite height
       this.position.x, // Position X in canvas
@@ -43,10 +76,12 @@ class Mario {
   }
 
   update() {
+    // this.updateAnimation()
     this.draw();
     // Gravity system (more or less)
     this.position.y += this.velocity.y;
     this.position.x += this.velocity.x;
+    console.log(this.position.x);
     if (this.position.y + this.height + this.velocity.y < this.canvas.height - CONFIGS.STAGE_FLOOR_HEIGHT)
       this.velocity.y += CONFIGS.GRAVITY;
     else this.velocity.y = 0;
@@ -56,7 +91,7 @@ class Mario {
     if (this.position.y + this.height + this.velocity.y < this.canvas.height - CONFIGS.STAGE_FLOOR_HEIGHT) {
       return false
     }
-    else {
+    else {      
       return true
     }
   }

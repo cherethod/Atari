@@ -10,7 +10,7 @@ class Turtle extends Monster {
     this.width = 16
     this.height = 16
     this.velocity = {
-      x: 0.8,
+      x: 1,
       y: 1,
       flipped: 20
     }
@@ -63,7 +63,7 @@ class Turtle extends Monster {
         this.frameIndex = (this.frameIndex + 1) % animation.length;
       }
     }
-    console.log(animation);
+    // console.log(animation);
   }
 
   draw () {
@@ -98,8 +98,8 @@ class Turtle extends Monster {
       this.position.y + this.height + this.velocity.y < this.canvas.height - CONFIGS.STAGE_FLOOR_HEIGHT
       )    this.velocity.y += CONFIGS.GRAVITY
     else this.velocity.y = 0
-    console.log(this.frameIndex);
-    console.log(this.currentAnimation);
+    // console.log(this.frameIndex);
+    // console.log(this.currentAnimation);
   }
   
 }
