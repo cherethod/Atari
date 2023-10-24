@@ -4,12 +4,22 @@ class Monster {
     this.ctx = ctx
     this.position = position
     this.sprite = sprite
+    this.direction = 1 // 1 right  -  0 left 
     this.velocity = {
       x: 10,
       y: 1,
-    }
+    }   
 
   }
+
+
+
+  update(mario) {
+   this.checkCollision(mario)
+  }
+
+
+
 }
 
 export default Monster

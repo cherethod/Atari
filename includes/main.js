@@ -20,10 +20,6 @@ canvas.height = CONFIGS.BOARD_HEIGHT
 const marioSprite = new Image()
 marioSprite.src = '../resources/sprites/mario/mario.png'
 
-
-// const enemiesSprite = new Image()
-// enemiesSprite.src = '../resources/characters.png'
-
 //  * CONSTRUCTORS 
 
 const mario = new Mario(canvas, ctx, {
@@ -34,7 +30,7 @@ const mario = new Mario(canvas, ctx, {
 const turtle1 = new Turtle(canvas, ctx, {
   x: canvas.width - 130, 
   y: 50
-})
+}, mario)
 
 const stage = new Stages(canvas, ctx, {
   x: 0,
@@ -48,62 +44,16 @@ function animate() {
   ctx.fillStyle = '#000'
   ctx.fillRect(0, 0, canvas.width, canvas.height)
   stage.update()
+  turtle1.update()
+ 
   mario.update()
   mario.updateAnimation()
-  turtle1.update()
 
   mario.velocity.x = 0
   if (pressedKeys.left.pressed && mario.position.x > 0) mario.velocity.x = -1
   else if (pressedKeys.right.pressed && mario.position.x < canvas.width - mario.width) mario.velocity.x = 1
 
-  checkCollision()
-}
-
-
-// TODO -> JOEL ARREGLAR ESTA
-function checkCollision () {
-  if (turtle1.direction === 0) {
-    const turtleHitBoxStart = turtle1.position.x
-    const turtleHitBoxEnd = turtle1.position.x + (0.4 * turtle1.width)
-    if (mario.position.x + mario.width > turtleHitBoxStart && mario.position.x < turtleHitBoxEnd)   {
-      alert('hit desde derecha')
-    }
-  } else if (turtle1.direction === 1) {
-    const turtleHitBoxStart = turtle1.position.x + (0.6 * turtle1.width)
-    const turtleHitBoxEnd = turtle1.position.x + turtle1.width
-    if (mario.position.x + turtle1.width > turtleHitBoxStart && mario.position.x < turtleHitBoxEnd) {
-      alert('hit desde izquierda')
-    }
-  }
-  // console.log(`Mario X -> ${mario.position.x} - Turtle X -> ${turtle1.position.x} \n 
-  // Mario Y -> ${mario.position.y} - Turtle Y -> ${turtle1.position.y} `);
-
-  // console.log(`
-  // Posicion X Mario -> ${mario.position.x}\n
-  // Posicion X Tortuga -> ${turtle1.position.x}\n
-  // Diferencia posiciones -> ${mario.position.x - turtle1.position.x - turtle1.width}\n
-  // `)
-  // if (
-  //   turtle1.direction == 0 && turtle1.position.y - (mario.height - turtle1.height) == mario.position.y &&
-  //   ((mario.position.x ) - (turtle1.position.x - mario.width)) >= 0 && (mario.position.x - turtle1.position.x + mario.width) <= turtle1.width / 4 
-  // ) console.log('colision tortuga hacia izquierda')
-  // if (
-  //   turtle1.direction == 1 && turtle1.position.y - (mario.height - turtle1.height) == mario.position.y &&
-  //   // ((turtle1.position.x + turtle1.width) - mario.position.x) <= 0 && (mario.position.x - turtle1.position.x + mario.width) <= turtle1.width / 4 
-  //   turtle1.position.x == mario.position.x - turtle1.width /*&& (mario.position.x - turtle1.position.x + turtle1.width) >= mario.width /4 * -1*/
-  // ) console.log('colision tortuga hacia derecha')
-if (
-  mario.position.x + mario.width >= turtle1.position.x &&
-  mario.position.x <= turtle1.position.x + turtle1.width &&
-  mario.position.y == turtle1.position.y
-  ) console.log('collision')
-
-  if (
-    !pressedKeys.left.pressed && !pressedKeys.right.pressed 
-    && !pressedKeys.space.pressed && mario.isOverFloor() && mario.direction == 1) mario.setAnimation('idleRight')
-    else if (
-      !pressedKeys.left.pressed && !pressedKeys.right.pressed 
-      && !pressedKeys.space.pressed && mario.isOverFloor() && mario.direction == 0) mario.setAnimation('idleLeft')
+  // turtle1.checkCollision(mario)
 }
 
 
@@ -139,6 +89,7 @@ window.addEventListener('keydown', (e) => {
     if (!pressedKeys.space.pressed && mario.direction == 0)  mario.setAnimation('jumpLeft')
     if (!pressedKeys.space.pressed && mario.direction == 1)  mario.setAnimation('jumpRight')
     pressedKeys.space.pressed = true
+    
     if (mario.isOverFloor()) mario.velocity.y = -7.2     
     break;
     // * TEST STAGE UPDATE

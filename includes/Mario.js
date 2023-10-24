@@ -84,7 +84,7 @@ class Mario {
     // Gravity system (more or less)
     this.position.y += this.velocity.y;
     this.position.x += this.velocity.x;
-    console.log(this.position.x);
+    // console.log(this.position.x);
     if (this.position.y + this.height + this.velocity.y < this.canvas.height - CONFIGS.STAGE_FLOOR_HEIGHT)
       this.velocity.y += CONFIGS.GRAVITY;
     else this.velocity.y = 0;
@@ -94,7 +94,7 @@ class Mario {
     if (this.position.y + this.height + this.velocity.y < this.canvas.height - CONFIGS.STAGE_FLOOR_HEIGHT) {
       return false
     }
-    else {      
+    else {            
       return true
     }
   }

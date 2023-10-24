@@ -2,11 +2,12 @@ import Monster from "./Monster.js";
 import CONFIGS from "./Configs.js"
 
 class Turtle extends Monster {
-  constructor(canvas, ctx, position) {
+  constructor(canvas, ctx, position, mario) {
     super()
     this.position = position
     this.canvas = canvas
     this.ctx = ctx
+    this.mario = mario
     this.width = 32
     this.height = 32
     this.velocity = {
@@ -16,7 +17,7 @@ class Turtle extends Monster {
     }
     this.sprite = new Image()
     this.sprite.src = '../resources/sprites/enemies/turtle.png'
-    this.direction = 1 // 1 right  -  0 left
+    this.direction = 1 // 1 right  -  0 left 
     this.animations = {
       'idleLeft': [{x: 0, y: 0}],
       'runLeft': [
@@ -54,6 +55,65 @@ class Turtle extends Monster {
     this.animationCounter = 0;
   }
 
+  checkCollision (mario) {
+    if (this.direction === 0) {  
+      const turtleHitBoxStart = {
+        x: this.position.x,
+        y: this.position.y - (mario.height - this.height)
+      }
+      const turtleHitBoxEnd = {
+        x: this.position.x + (0.4 * this.width),
+        y: this.position.y + this.height
+      }
+      if (
+          (
+            mario.position.x + mario.width > turtleHitBoxStart.x &&       
+            mario.position.x < turtleHitBoxEnd.x
+          ) &&
+  
+          (
+            (
+              mario.position.y + mario.height > turtleHitBoxStart.y &&
+              mario.position.y + mario.height < turtleHitBoxEnd.y
+            ) || (
+              mario.position.y < turtleHitBoxEnd.y &&
+              mario.position.y >= turtleHitBoxStart.y
+            )
+          )
+        ) {
+        console.log('hit desde derecha')
+      }
+    } else if (this.direction === 1) {
+      const turtleHitBoxStart = {
+        x: this.position.x + (0.6 * this.width),
+        y: this.position.y - (mario.height - this.height)
+      }
+      const turtleHitBoxEnd = {
+        x: this.position.x  + this.width,
+        y: this.position.y + this.height
+      }
+  
+      if (
+        (
+          mario.position.x + this.width > turtleHitBoxStart.x &&
+          mario.position.x < turtleHitBoxEnd.x
+        ) &&
+  
+        (
+          (
+            mario.position.y + mario.height > turtleHitBoxStart.y &&
+            mario.position.y + mario.height < turtleHitBoxEnd.y 
+          ) || (          
+            mario.position.y < turtleHitBoxEnd.y &&
+            mario.position.y >= turtleHitBoxStart.y
+          )
+        ) 
+      ) {
+        console.log('hit desde izquierda')
+      }
+    }
+  }
+
   updateAnimation() {
     let animation = this.animations[this.currentAnimation];
     if (animation) {
@@ -81,6 +141,7 @@ class Turtle extends Monster {
   }
 
   update () {
+    this.checkCollision(this.mario)
     this.updateAnimation()
     this.draw()    
     if (this.position.x < 0) {
@@ -98,8 +159,6 @@ class Turtle extends Monster {
       this.position.y + this.height + this.velocity.y < this.canvas.height - CONFIGS.STAGE_FLOOR_HEIGHT
       )    this.velocity.y += CONFIGS.GRAVITY
     else this.velocity.y = 0
-    // console.log(this.frameIndex);
-    // console.log(this.currentAnimation);
   }
   
 }
