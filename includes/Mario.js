@@ -12,8 +12,6 @@ class Mario {
       y: 1,
     };
     this.marioSprite = sprite;
-    // this.spriteHeight = 21;
-    // this.spriteWidth = 18;
     this.animations = {
       'idleRight': [{ x: 0, y: 0 }],
       'idleLeft': [{ x: this.width * 19, y: 0 }],
@@ -42,10 +40,6 @@ class Mario {
   }
 
   updateAnimation() {
-    // console.log(this.animations[this.currentAnimation].length);
-    // console.log(`current animation -> ${this.currentAnimation}\n
-    // current frameindex -> ${this.frameIndex}`);
-
     let animation = this.animations[this.currentAnimation];
     if (animation) {
       this.animationCounter++;
@@ -54,7 +48,6 @@ class Mario {
         this.frameIndex = (this.frameIndex + 1) % animation.length;
       }
     }
-    // console.log(animation);
   }
 
   setAnimation (animationName) {
@@ -64,7 +57,6 @@ class Mario {
   }
 
   draw() {
-  // this.updateAnimation()
   this.ctx.drawImage(
       this.marioSprite, // This is the sprite
       this.animations[this.currentAnimation][this.frameIndex].x, // Position X in the sprite
@@ -79,7 +71,6 @@ class Mario {
   }
 
   update() {
-    // this.updateAnimation()
     this.draw();
     // Gravity system (more or less)
     this.position.y += this.velocity.y;

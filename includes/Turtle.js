@@ -21,31 +21,35 @@ class Turtle extends Monster {
     this.animations = {
       'idleLeft': [{x: 0, y: 0}],
       'runLeft': [
-        {x: 0, y:0},
-        {x: this.width, y:0},
-        {x: this.width * 2, y:0},
+        {x: 0, y: 0},
+        {x: this.width, y: 0},
+        {x: this.width * 2, y: 0},
       ],
       'turnRight': [        
-        {x: this.width * 3, y:0},
-        {x: this.width * 4, y:0},
+        {x: this.width * 3, y: 0},
+        {x: this.width * 4, y: 0},
       ],
       'runRight': [
-        {x: this.width * 19, y:0},
-        {x: this.width * 18, y:0},
-        {x: this.width * 17, y:0},
+        {x: this.width * 19, y: 0},
+        {x: this.width * 18, y: 0},
+        {x: this.width * 17, y: 0},
       ],
       'turnLeft': [        
-        {x: this.width * 16, y:0},
-        {x: this.width * 15, y:0},
+        {x: this.width * 16, y: 0},
+        {x: this.width * 15, y: 0},
       ],
-      'fallLeft': [{x: this.width * 5, y:0}],
+      'fallLeft': [{x: this.width * 5, y: 0}],
       'flippedLeft': [
-        {x: this.width * 6, y:0},
-        {x: this.width * 7 , y:0},
+        {x: this.width * 6, y: 0},
+        {x: this.width * 7, y: 0},
+      ],
+      'flippedRight': [
+        {x: this.width * 12, y: 0},
+        {x: this.width * 13, y: 0},
       ],
       'shell': [
-        {x: this.width * 19, y:0},
-        {x: this.width * 19 + 8, y:0},
+        {x: this.width * 19, y: 0},
+        {x: this.width * 19 + 8, y: 0},
 
       ]
     }
@@ -53,6 +57,7 @@ class Turtle extends Monster {
     this.currentAnimation = 'runRight'
     this.animationSpeed = 25;
     this.animationCounter = 0;
+    this.status = 'normal'
   }
 
   checkCollision (mario) {
@@ -65,7 +70,7 @@ class Turtle extends Monster {
         x: this.position.x + (0.4 * this.width),
         y: this.position.y + this.height
       }
-      if (
+      if (this.status == 'normal' &&
           (
             mario.position.x + mario.width > turtleHitBoxStart.x &&       
             mario.position.x < turtleHitBoxEnd.x
@@ -83,6 +88,15 @@ class Turtle extends Monster {
         ) {
         console.log('hit desde derecha')
       }
+      else if (
+        mario.position.x + mario.width > turtleHitBoxStart.x &&
+        mario.position.x + mario.width > turtleHitBoxEnd.x &&
+        mario.position.x + mario.width < this.position.x + this.width 
+        ) {
+          console.log('golpe en caparazón');
+          this.status = 'flipped'
+        }
+
     } else if (this.direction === 1) {
       const turtleHitBoxStart = {
         x: this.position.x + (0.6 * this.width),
@@ -93,7 +107,7 @@ class Turtle extends Monster {
         y: this.position.y + this.height
       }
   
-      if (
+      if (this.status == 'normal' &&
         (
           mario.position.x + this.width > turtleHitBoxStart.x &&
           mario.position.x < turtleHitBoxEnd.x
@@ -111,6 +125,13 @@ class Turtle extends Monster {
       ) {
         console.log('hit desde izquierda')
       }
+      else if (
+        mario.position.x > this.position.x &&
+        mario.position.x < turtleHitBoxStart.x
+      ) {
+        console.log('golpe en caparazón');
+        this.status = 'flipped'
+      }
     }
   }
 
@@ -124,6 +145,12 @@ class Turtle extends Monster {
       }
     }
     // console.log(animation);
+  }
+
+  setAnimation (animationName) {
+    this.frameIndex = 0
+    this.currentAnimation = animationName
+    this.animationCounter = 0
   }
 
   draw () {
@@ -159,6 +186,22 @@ class Turtle extends Monster {
       this.position.y + this.height + this.velocity.y < this.canvas.height - CONFIGS.STAGE_FLOOR_HEIGHT
       )    this.velocity.y += CONFIGS.GRAVITY
     else this.velocity.y = 0
+ 
+    if (this.status == 'flipped') {
+      this.velocity.x = 0
+      this.frameIndex = 0
+      this.animationCounter = 0
+      // this.velocity.y = 0
+      this.currentAnimation = (this.direction == 0) ? 'flippedLeft' : 'flippedRight'
+      setTimeout(() => {
+        this.frameIndex = 0
+        this.animationCounter = 0
+        this.status = 'normal';
+        this.currentAnimation = (this.direction == 0) ? 'runLeft' : 'runRight'
+        this.velocity.x = 1
+        // this.velocity.y = 1
+      }, 10000);
+    }
   }
   
 }

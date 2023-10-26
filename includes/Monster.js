@@ -14,12 +14,6 @@ class Monster {
 
 
 
-  update(mario) {
-   this.checkCollision(mario)
-  }
-
-
-
 }
 
 export default Monster
