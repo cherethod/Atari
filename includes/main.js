@@ -68,18 +68,18 @@ function animate() {
   mario.updateAnimation()
   
   mario.velocity.x = 0
-  if (pressedKeys.left.pressed) mario.velocity.x = -1
-  else if (pressedKeys.right.pressed) mario.velocity.x = 1
-  if (pressedKeys.left.pressed && mario.position.x <= 0 - mario.width /2) mario.position.x = canvas.width
-  else if (pressedKeys.right.pressed && mario.position.x >= canvas.width) mario.position.x = 0
+  if (mario.pressedKeys.left.pressed) mario.velocity.x = -1
+  else if (mario.pressedKeys.right.pressed) mario.velocity.x = 1
+  if (mario.pressedKeys.left.pressed && mario.position.x <= 0 - mario.width /2) mario.position.x = canvas.width
+  else if (mario.pressedKeys.right.pressed && mario.position.x >= canvas.width) mario.position.x = 0
   if (
-    !pressedKeys.left.pressed && !pressedKeys.right.pressed && 
-    !pressedKeys.space.pressed && mario.isOverFloor() && mario.direction == 1 && 
+    !mario.pressedKeys.left.pressed && !mario.pressedKeys.right.pressed && 
+    !mario.pressedKeys.space.pressed && mario.isOverFloor() && mario.direction == 1 && 
     mario.status == 'alive'
     ) mario.setAnimation('idleRight')
     else if (
-      !pressedKeys.left.pressed && !pressedKeys.right.pressed 
-      && !pressedKeys.space.pressed && mario.isOverFloor() && 
+      !mario.pressedKeys.left.pressed && !mario.pressedKeys.right.pressed 
+      && !mario.pressedKeys.space.pressed && mario.isOverFloor() && 
       mario.direction == 0 && mario.status == 'alive'
       ) mario.setAnimation('idleLeft')
 
@@ -87,81 +87,70 @@ function animate() {
 }
 
 
-//  * Pressed side keys map
-const pressedKeys = {
-  left: {
-    pressed: false,
-  },
-  right: {
-    pressed: false,
-  },
-  space: {
-    pressed: false
-  }
-}
+
 
 //  * LISTENERS
 
-window.addEventListener('keydown', (e) => {
-  // console.log(e.code);
-if (mario.status == 'alive') {
-  switch (e.code) {
-    case (keyboardType = 1) ? 'KeyA': 'ArrowLeft' :
-      if (!pressedKeys.left.pressed)  mario.setAnimation('runLeft')
-      pressedKeys.left.pressed = true
-      mario.direction = 0    
-      break;
-    case (keyboardType = 1) ? 'KeyD': 'ArrowRight' :
-      if (!pressedKeys.right.pressed)  mario.setAnimation('runRight')    
-      pressedKeys.right.pressed = true        
-      mario.direction = 1
-      break;
-    case 'Space' :
-      if (!pressedKeys.space.pressed && mario.direction == 0)  mario.setAnimation('jumpLeft')
-      if (!pressedKeys.space.pressed && mario.direction == 1)  mario.setAnimation('jumpRight')
-      pressedKeys.space.pressed = true      
-      if (mario.isOverFloor() && mario.position.y >= 0 ){
-        if (mario.position.y - CONFIGS.MARIO_JUMP >=0){
-          mario.velocity.y = -CONFIGS.MARIO_JUMP
-        }
-        else if (mario.position.y - CONFIGS.MARIO_JUMP < 0) {
-          alert()
-        }
+// window.addEventListener('keydown', (e) => {
+//   // console.log(e.code);
+// if (mario.status == 'alive') {
+//   switch (e.code) {
+//     case (keyboardType = 1) ? 'KeyA': 'ArrowLeft' :
+//       if (!pressedKeys.left.pressed)  mario.setAnimation('runLeft')
+//       pressedKeys.left.pressed = true
+//       mario.direction = 0    
+//       break;
+//     case (keyboardType = 1) ? 'KeyD': 'ArrowRight' :
+//       if (!pressedKeys.right.pressed)  mario.setAnimation('runRight')    
+//       pressedKeys.right.pressed = true        
+//       mario.direction = 1
+//       break;
+//     case 'Space' :
+//       if (!pressedKeys.space.pressed && mario.direction == 0)  mario.setAnimation('jumpLeft')
+//       if (!pressedKeys.space.pressed && mario.direction == 1)  mario.setAnimation('jumpRight')
+//       pressedKeys.space.pressed = true      
+//       if (mario.isOverFloor() && mario.position.y >= 0 ){
+//         if (mario.position.y - CONFIGS.MARIO_JUMP >=0){
+//           mario.velocity.y = -CONFIGS.MARIO_JUMP
+//         }
+//         else if (mario.position.y - CONFIGS.MARIO_JUMP < 0) {
+//           alert()
+//         }
       
-      } 
+//       } 
         
-      break;
-      // * TEST STAGE UPDATE
-    case 'F1':
-      // console.log(stage.currentStage++);
-      stage.currentStage = (stage.currentStage > 3) ? 1 : stage.currentStage++
-      stage.image.src = stage.stages[stage.currentStage]
-      break
-    default:
-      break;
-   }
-}
-})
+//       break;
+//       // * TEST STAGE UPDATE
+//     case 'F1':
+//       // console.log(stage.currentStage++);
+//       stage.currentStage = (stage.currentStage > 3) ? 1 : stage.currentStage++
+//       stage.image.src = stage.stages[stage.currentStage]
+//       break
+//     default:
+//       break;
+//    }
+// }
+// })
 
-window.addEventListener('keyup', (e) => {
-if (mario.status == 'alive') {
-  switch (e.code) {
-    case (keyboardType = 1) ? 'KeyA': 'ArrowLeft' :
-      pressedKeys.left.pressed = false
-      // mario.setAnimation('idle')
-      break;
-    case (keyboardType = 1) ? 'KeyD': 'ArrowRight' :
-      pressedKeys.right.pressed = false    
-      // mario.setAnimation('idle')
-      break
-    case 'Space': 
-        pressedKeys.space.pressed = false
-        // (mario.isOverFloor()) ? mario.setAnimation('idle') : null
-    default:
-      break;
-   }
-}
-})
+// window.addEventListener('keyup', (e) => {
+// if (mario.status == 'alive') {
+//   switch (e.code) {
+//     case (keyboardType = 1) ? 'KeyA': 'ArrowLeft' :
+//       pressedKeys.left.pressed = false
+//       // mario.setAnimation('idle')
+//       break;
+//     case (keyboardType = 1) ? 'KeyD': 'ArrowRight' :
+//       pressedKeys.right.pressed = false    
+//       // mario.setAnimation('idle')
+//       break
+//     case 'Space': 
+//         pressedKeys.space.pressed = false
+//         // (mario.isOverFloor()) ? mario.setAnimation('idle') : null
+//     default:
+//       break;
+//    }
+// }
+// })
 
 powerBtn.addEventListener('click', e => {
   e.target.classList.toggle('active')
@@ -172,3 +161,4 @@ powerBtn.addEventListener('click', e => {
 
 powerBtn.click()
 animate()
+mario.addEventListeners()

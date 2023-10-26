@@ -39,7 +39,107 @@ class Mario {
     this.animationCounter = 0
     this.direction = 1 // 1 right  -  0 left
     this.status = 'alive'
+
+    //  * Pressed side keys map
+    this.pressedKeys = {
+      left: {
+        pressed: false,
+      },
+      right: {
+        pressed: false,
+      },
+      space: {
+        pressed: false
+      }
+    }
   }
+
+
+  addEventListeners() {
+    window.addEventListener('keydown', (e) => {
+      if (this.status === 'alive') {
+        switch (e.code) {
+          case 'KeyA':
+          case 'ArrowLeft':
+            if (!this.pressedKeys.left.pressed) this.setAnimation('runLeft');
+            this.pressedKeys.left.pressed = true;
+            this.direction = 0;
+            break;
+          case 'KeyD':
+          case 'ArrowRight':
+            if (!this.pressedKeys.right.pressed) this.setAnimation('runRight');
+            this.pressedKeys.right.pressed = true;
+            this.direction = 1;
+            break;
+          case 'Space':
+            if (!this.pressedKeys.space.pressed && this.direction === 0) this.setAnimation('jumpLeft');
+            if (!this.pressedKeys.space.pressed && this.direction === 1) this.setAnimation('jumpRight');
+            this.pressedKeys.space.pressed = true;
+
+            if (this.isOverFloor() && this.position.y >= 0) {
+              if (this.position.y - CONFIGS.MARIO_JUMP >= 0) {
+                this.velocity.y = -CONFIGS.MARIO_JUMP;
+              } else if (this.position.y - CONFIGS.MARIO_JUMP < 0) {
+                alert('Cannot jump any higher');
+              }
+            }
+            break;
+          default: 
+            break;
+        }
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (this.status === 'alive') {
+        switch (e.code) {
+          case 'KeyA':
+          case 'ArrowLeft':
+            this.pressedKeys.left.pressed = false;
+            break;
+          case 'KeyD':
+          case 'ArrowRight':
+            this.pressedKeys.right.pressed = false;
+            break;
+          case 'Space':
+            this.pressedKeys.space.pressed = false;
+            break;
+          default:
+            break;
+        }
+      }
+    });
+  }
+
+  // handleMovement() {
+  //   this.velocity.x = 0;
+
+  //   if (this.pressedKeys.left) {
+  //     this.velocity.x = -1;
+  //   } else if (this.pressedKeys.right) {
+  //     this.velocity.x = 1;
+  //   }
+
+  //   if (this.pressedKeys.left && this.position.x <= 0 - this.width / 2) {
+  //     this.position.x = this.canvas.width;
+  //   } else if (this.pressedKeys.right && this.position.x >= this.canvas.width) {
+  //     this.position.x = 0;
+  //   }
+
+  //   if (
+  //     !this.pressedKeys.left && !this.pressedKeys.right && 
+  //     !this.pressedKeys.space && this.isOverFloor() && this.direction === 1 && 
+  //     this.status === 'alive'
+  //   ) {
+  //     this.setAnimation('idleRight');
+  //   } else if (
+  //     !this.pressedKeys.left && !this.pressedKeys.right && 
+  //     !this.pressedKeys.space && this.isOverFloor() && this.direction === 0 && 
+  //     this.status === 'alive'
+  //   ) {
+  //     this.setAnimation('idleLeft');
+  //   }
+  // }
 
   updateAnimation() {
     let animation = this.animations[this.currentAnimation]
