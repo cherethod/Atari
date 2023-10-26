@@ -5,6 +5,7 @@ const CONFIGS = {
   CHARACTER_HEIGHT: 21,
   STAGE_FLOOR_HEIGHT: 32,
   GRAVITY: 0.25,
+  MARIO_JUMP: 7.2
 }
 
 export default CONFIGS

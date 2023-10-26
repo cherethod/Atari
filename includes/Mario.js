@@ -1,17 +1,18 @@
-import CONFIGS from "./Configs.js";
+import CONFIGS from "./Configs.js"
+import platforms from "./MarioCollisions.js"
 
 class Mario {
   constructor(canvas, ctx, position, sprite) {
-    this.position = position;
-    this.canvas = canvas;
-    this.ctx = ctx;
-    this.width = 32;
-    this.height = 48;
+    this.position = position
+    this.canvas = canvas
+    this.ctx = ctx
+    this.width = 32
+    this.height = 48
     this.velocity = {
       x: 0,
       y: 1,
-    };
-    this.marioSprite = sprite;
+    }
+    this.marioSprite = sprite
     this.animations = {
       'idleRight': [{ x: 0, y: 0 }],
       'idleLeft': [{ x: this.width * 19, y: 0 }],
@@ -31,8 +32,8 @@ class Mario {
       'jumpLeft': [{x: this.width * 15, y: 0}],
       'stop': [{x: this.width * 5, y: 0}],
       'fall': [{x: this.width * 7, y: 0}],
-    };
-    this.frameIndex = 0;
+    }
+    this.frameIndex = 0
     this.currentAnimation = 'idleRight'
     this.animationSpeed = 5
     this.animationCounter = 0
@@ -41,12 +42,12 @@ class Mario {
   }
 
   updateAnimation() {
-    let animation = this.animations[this.currentAnimation];
+    let animation = this.animations[this.currentAnimation]
     if (animation) {
-      this.animationCounter++;
+      this.animationCounter++
       if (this.animationCounter >= this.animationSpeed) {
-        this.animationCounter = 0;
-        this.frameIndex = (this.frameIndex + 1) % animation.length;
+        this.animationCounter = 0
+        this.frameIndex = (this.frameIndex + 1) % animation.length
       }
     }
   }
@@ -68,37 +69,73 @@ class Mario {
       this.position.y, // Position Y in canvas
       this.width, // Ni puta idea por qué repetimos ancho
       this.height // Ni puta idea por qué repetimos alto
-    );
+    )
   }
 
   update() {
-    this.draw();
+    this.draw()
     // Gravity system (more or less)
-    this.position.y += this.velocity.y;
-    this.position.x += this.velocity.x;
-    // console.log(this.position.x);
-    if (this.position.y + this.height + this.velocity.y < this.canvas.height - CONFIGS.STAGE_FLOOR_HEIGHT)
-      this.velocity.y += CONFIGS.GRAVITY;
-    else this.velocity.y = 0;
+    if (this.status == 'alive') {
+      this.position.y += this.velocity.y
+      this.position.x += this.velocity.x
+    } 
+    (this.isOverFloor() && this.status == 'alive') ? this.velocity.y = 0 : this.velocity.y += CONFIGS.GRAVITY
+    console.log(this.checkArrayValue((this.position.x + (this.width / 2)), (this.position.y)));
   }
 
   killMario() {
-    if (this.status == 'alive') {
-      this.velocity.x = 0
-      this.velocity.y = 0
+    if (this.status == 'alive') {  
       this.status = 'dead'
       this.setAnimation('stop')  
+      setTimeout(() => {
+        this.deadAnimation()          
+      }, 2000)
+      
     }
    }
+   deadAnimation() {
+    this.setAnimation('fall')
+    this.velocity.y = 0.5
+    this.position.y -= this.height * 1.5
+    const finalY = this.canvas.height + this.height
+  
+    const fallInterval = setInterval(() => {
+      this.position.y += this.velocity.y
+      if (this.position.y >= finalY) {
+        clearInterval(fallInterval)
+      }
+    }, 1000 / 60)
+  }
+
+  checkArrayValue(posX, posY) {
+    const arrayColumns = platforms[0].length
+    const arrayRows = platforms.length
+    const arraySize = 8 
+    const arrayX = Math.floor(posX / arraySize)
+    const arrayY = Math.floor(posY / arraySize)
+    if (arrayY < arrayRows && arrayX < arrayColumns) {   
+      if (platforms[arrayY][arrayX] != undefined) {  
+        return platforms[arrayY][arrayX] 
+      }
+    }
+  }
 
   isOverFloor() {
-    if (this.position.y + this.height + this.velocity.y < this.canvas.height - CONFIGS.STAGE_FLOOR_HEIGHT) {
-      return false
+    const arrayColumns = platforms[0].length
+    const arrayRows = platforms.length
+    const arraySize = 8  
+  
+    const arrayX = Math.floor(this.position.x / arraySize)
+    const arrayY = Math.floor((this.position.y + this.height ) / arraySize)
+    // console.log(platforms[arrayY][arrayX]);
+    if (arrayY < arrayRows && arrayX < arrayColumns) {
+      if (platforms[arrayY][arrayX] === 0) {
+        return false
+      }
     }
-    else {            
-      return true
-    }
+
+    return true
   }
 }
 
-export default Mario;
+export default Mario
