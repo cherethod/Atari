@@ -6,7 +6,7 @@ class Mario {
     this.canvas = canvas;
     this.ctx = ctx;
     this.width = 32;
-    this.height = 46;
+    this.height = 48;
     this.velocity = {
       x: 0,
       y: 1,
@@ -37,6 +37,7 @@ class Mario {
     this.animationSpeed = 5
     this.animationCounter = 0
     this.direction = 1 // 1 right  -  0 left
+    this.status = 'alive'
   }
 
   updateAnimation() {
@@ -80,6 +81,15 @@ class Mario {
       this.velocity.y += CONFIGS.GRAVITY;
     else this.velocity.y = 0;
   }
+
+  killMario() {
+    if (this.status == 'alive') {
+      this.velocity.x = 0
+      this.velocity.y = 0
+      this.status = 'dead'
+      this.setAnimation('stop')  
+    }
+   }
 
   isOverFloor() {
     if (this.position.y + this.height + this.velocity.y < this.canvas.height - CONFIGS.STAGE_FLOOR_HEIGHT) {
