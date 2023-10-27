@@ -1,9 +1,10 @@
 class Pow {
-  constructor(canvas, ctx, position, mario) {
+  constructor(canvas, ctx, position, mario, turtles) {
     this.position = position
     this.canvas = canvas
     this.ctx = ctx
     this.mario = mario
+    this.turtles = turtles
     this.width = 32
     this.height = 32
     this.sprite = new Image()
@@ -52,6 +53,7 @@ class Pow {
           setInterval(() => {
             this.postShake()
           }, 100);
+          this.turtles.forEach(turtle => turtle.setStatus('flipped'))
         }
       }
   }

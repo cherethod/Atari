@@ -30,11 +30,11 @@ const mario = new Mario(canvas, ctx, marioSprite);
 
 
 const turtles = []
-const newTurtle = new Turtle(canvas, ctx, {
-  x: canvas.width - 130, 
-  y: 50
-}, 0, 0, mario, turtles);
-turtles.push(newTurtle)
+// const newTurtle = new Turtle(canvas, ctx, {
+//   x: canvas.width - 130, 
+//   y: 50
+// }, 0, 0, mario, turtles);
+// turtles.push(newTurtle)
 
 /*
 const turtle1 = new Turtle(canvas, ctx, {
@@ -50,8 +50,17 @@ const stage = new Stages(canvas, ctx, {
 const pow = new Pow(canvas, ctx, {
   x: 240,
   y: 320
-}, mario);
+}, mario, turtles);
 
+const generateEnemies = async () => {
+    const randomSpawn = Math.random()
+    let direction = (randomSpawn >= (1 - randomSpawn)) ? 0 : 1
+      const newTurtle = new Turtle(canvas, ctx, {
+        x: (direction == 0) ? canvas.width - 96 : 64,
+        y: 48
+      }, direction, mario, turtles)
+      turtles.push(newTurtle)
+}
 
 //  * Animate loop
 function animate() {
@@ -61,7 +70,6 @@ function animate() {
 
   stage.update()
 
-  // turtle1.update()
   turtles.forEach(turtle => turtle.update())
 
   ctx.drawImage(
@@ -89,8 +97,8 @@ function animate() {
       && !mario.pressedKeys.space.pressed && mario.isOverFloor() && 
       mario.direction == 0 && mario.status == 'alive'
       ) mario.setAnimation('idleLeft')
-
   // turtle1.checkCollision(mario)
+
 }
 
 
@@ -169,3 +177,27 @@ powerBtn.addEventListener('click', e => {
 powerBtn.click()
 animate()
 mario.addEventListeners()
+let enemiesCount;
+switch (stage.currentStage) {
+  case 1:
+    enemiesCount = 10
+    break;
+  case 2: 
+    enemiesCount = 15
+    break;
+  case 3:
+    enemiesCount = 20
+    break;
+  default:
+    break;
+}
+
+for (let i = 0; i < enemiesCount; i++) {
+  console.log(enemiesCount);
+  await generateEnemies()
+  enemiesCount -= 1
+  setInterval(() => {
+    
+  }, 5000);
+}
+

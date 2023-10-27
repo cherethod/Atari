@@ -11,6 +11,11 @@ class Stages {
       2: '../resources/sprites/stages/stage2.png',
       3: '../resources/sprites/stages/stage3.png',
     }
+    this.enemiesCount = {
+      1: 10,
+      2: 15,
+      3: 20
+    }
     this.image = new Image()
     this.image.src = this.stages[this.currentStage]
   }

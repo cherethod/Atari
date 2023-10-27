@@ -5,12 +5,12 @@ import enemiesCollisions from "./EnemiesCollisions.js";
 
 
 class Turtle extends Monster {
-  constructor(canvas, ctx, position, direction, id, mario, turtles) {
+  constructor(canvas, ctx, position, direction, mario, turtles) {
     super()
     this.position = position
     this.canvas = canvas
     this.ctx = ctx
-    this.id = id
+    // this.id = id
     this.mario = mario
     this.turtles = turtles
     this.width = 32
@@ -64,6 +64,7 @@ class Turtle extends Monster {
     this.animationCounter = 0;
     this.status = 'normal'
     this.statusPaused = 0
+    this.isAlive = true
   }
   
   checkCollision(mario) {
@@ -130,6 +131,7 @@ class Turtle extends Monster {
       marioTop < turtleBottom // Colisión vertical desde abajo
     ) {
       console.log('tortuga golpeada desde la derecha');
+      this.removeTurtle()
     } else if (
       marioLeft < turtleRight && // Colisión horizontal
       marioRight > turtleRight && // Mario a la derecha de la tortuga
@@ -137,6 +139,7 @@ class Turtle extends Monster {
       marioTop < turtleBottom // Colisión vertical desde abajo
     ) {
       console.log('tortuga golpeada desde la izquierda');
+      this.removeTurtle()
     }
   }
   }  
