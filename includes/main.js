@@ -26,15 +26,12 @@ pipes.src = '../resources/sprites/stages/pipes.png'
 
 //  * CONSTRUCTORS 
 
-const mario = new Mario(canvas, ctx, {
-  x: 50,
-  y: 50
-}, marioSprite);
+const mario = new Mario(canvas, ctx, marioSprite);
 
 const turtle1 = new Turtle(canvas, ctx, {
   x: canvas.width - 130, 
   y: 50
-}, mario);
+},0, mario);
 
 const stage = new Stages(canvas, ctx, {
   x: 0,
@@ -44,7 +41,7 @@ const stage = new Stages(canvas, ctx, {
 const pow = new Pow(canvas, ctx, {
   x: 240,
   y: 320
-});
+}, mario);
 
 
 //  * Animate loop
@@ -68,8 +65,8 @@ function animate() {
   mario.updateAnimation()
   
   mario.velocity.x = 0
-  if (mario.pressedKeys.left.pressed) mario.velocity.x = -1
-  else if (mario.pressedKeys.right.pressed) mario.velocity.x = 1
+  if (mario.pressedKeys.left.pressed) mario.velocity.x = -2
+  else if (mario.pressedKeys.right.pressed) mario.velocity.x = 2
   if (mario.pressedKeys.left.pressed && mario.position.x <= 0 - mario.width /2) mario.position.x = canvas.width
   else if (mario.pressedKeys.right.pressed && mario.position.x >= canvas.width) mario.position.x = 0
   if (

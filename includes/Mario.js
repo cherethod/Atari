@@ -1,9 +1,12 @@
 import CONFIGS from "./Configs.js"
-import platforms from "./MarioCollisions.js"
+import marioCollisions from "./MarioCollisions.js"
 
 class Mario {
-  constructor(canvas, ctx, position, sprite) {
-    this.position = position
+  constructor(canvas, ctx, sprite) {
+    this.position = {
+      x: 240,
+      y: 360
+    }
     this.canvas = canvas
     this.ctx = ctx
     this.width = 32
@@ -180,7 +183,7 @@ class Mario {
       this.position.x += this.velocity.x
     } 
     (this.isOverFloor() && this.status == 'alive') ? this.velocity.y = 0 : this.velocity.y += CONFIGS.GRAVITY
-    console.log(this.checkArrayValue((this.position.x + (this.width / 2)), (this.position.y)));
+    // console.log(this.checkArrayValue((this.position.x + (this.width / 2)), (this.position.y)));
   }
 
   killMario() {
@@ -208,28 +211,28 @@ class Mario {
   }
 
   checkArrayValue(posX, posY) {
-    const arrayColumns = platforms[0].length
-    const arrayRows = platforms.length
+    const arrayColumns = marioCollisions[0].length
+    const arrayRows = marioCollisions.length
     const arraySize = 8 
     const arrayX = Math.floor(posX / arraySize)
     const arrayY = Math.floor(posY / arraySize)
     if (arrayY < arrayRows && arrayX < arrayColumns) {   
-      if (platforms[arrayY][arrayX] != undefined) {  
-        return platforms[arrayY][arrayX] 
+      if (marioCollisions[arrayY][arrayX] != undefined) {  
+        return marioCollisions[arrayY][arrayX] 
       }
     }
   }
 
   isOverFloor() {
-    const arrayColumns = platforms[0].length
-    const arrayRows = platforms.length
+    const arrayColumns = marioCollisions[0].length
+    const arrayRows = marioCollisions.length
     const arraySize = 8  
   
     const arrayX = Math.floor(this.position.x / arraySize)
     const arrayY = Math.floor((this.position.y + this.height ) / arraySize)
-    // console.log(platforms[arrayY][arrayX]);
+    // console.log(marioCollisions[arrayY][arrayX]);
     if (arrayY < arrayRows && arrayX < arrayColumns) {
-      if (platforms[arrayY][arrayX] === 0) {
+      if (marioCollisions[arrayY][arrayX] === 0) {
         return false
       }
     }

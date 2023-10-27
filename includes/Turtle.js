@@ -1,8 +1,11 @@
 import Monster from "./Monster.js";
 import CONFIGS from "./Configs.js"
+import enemiesCollisions from "./EnemiesCollisions.js";
+
+
 
 class Turtle extends Monster {
-  constructor(canvas, ctx, position, mario) {
+  constructor(canvas, ctx, position, direction, mario) {
     super()
     this.position = position
     this.canvas = canvas
@@ -17,7 +20,7 @@ class Turtle extends Monster {
     }
     this.sprite = new Image()
     this.sprite.src = '../resources/sprites/enemies/turtle.png'
-    this.direction = 1 // 1 right  -  0 left 
+    this.direction = direction // 1 right  -  0 left 
     this.animations = {
       'idleLeft': [{x: 0, y: 0}],
       'runLeft': [
@@ -54,8 +57,8 @@ class Turtle extends Monster {
       ]
     }
     this.frameIndex = 0
-    this.currentAnimation = 'runRight'
-    this.animationSpeed = 25;
+    this.currentAnimation = (this.direction == 1) ? 'runRight' : 'runLeft'
+    this.animationSpeed = 15;
     this.animationCounter = 0;
     this.status = 'normal'
     this.statusPaused = 0
@@ -120,8 +123,7 @@ class Turtle extends Monster {
         if (this.statusPaused === 0 && mario.status == 'alive') this.setStatus('flipped');
       }
     }
-  }
-  
+  }  
 
   updateAnimation() {
     let animation = this.animations[this.currentAnimation];
@@ -154,8 +156,43 @@ class Turtle extends Monster {
         this.velocity.x = 1
       }, 10000);
     }
+  }  
+
+  getCollisionValue (value) {
+    const arrayColumns = enemiesCollisions[0].length
+    const arrayRows = enemiesCollisions.length
+    const arraySize = 8
+
+    const arrayX = Math.floor(this.position.x / arraySize)
+    const arrayY = Math.floor((this.position.y + this.height) / arraySize)
+
+    if (arrayY < arrayRows && arrayX < arrayColumns) {
+      if (enemiesCollisions[arrayY][arrayX] === value) {
+        return false
+      }
+    }
+    return true
   }
-  
+
+  checkStairs () {
+
+    // console.log(`
+    //   Turtle Y -> ${this.position.y}\n
+    //   Turtle X -> ${this.position.x}
+    // `);
+
+    /* DOWN - RIGHT PIPE */
+    if (this.position.y >= 360 && this.position.y <= 367 && this.position.x >= 445 && this.position.x <= 455) {
+      this.position.x = 64
+      this.position.y = 48
+    }
+
+    /* DOWN - LEFT PIPE */    
+    if (this.position.y >= 360 && this.position.y <= 367 && this.position.x >= 11 && this.position.x <= 20) {
+      this.position.x = this.canvas.width - (64 + this.width)
+      this.position.y = 48
+    }
+  }
 
   draw () {
     this.ctx.drawImage(
@@ -188,9 +225,16 @@ class Turtle extends Monster {
     this.position.y += this.velocity.y
     if (
       this.position.y + this.height + this.velocity.y < this.canvas.height - CONFIGS.STAGE_FLOOR_HEIGHT
-      )    this.velocity.y += CONFIGS.GRAVITY
+      )    (this.getCollisionValue(0)) ? this.velocity.y = 0 : this.velocity.y += CONFIGS.GRAVITY
+            // (this.getCollisionValue(3)) ? this.position.y - 8 : null           
     else this.velocity.y = 0
- 
+    if (!this.getCollisionValue(3)) this.position.y -= 8
+    // console.log(!this.getCollisionValue(3));
+    // console.log(`
+    // Turtle Y -> ${this.position.y}\n
+    // Turtle X -> ${this.position.x}
+    // `);
+    this.checkStairs()
   } 
   
 }
