@@ -1,0 +1,14 @@
+☐ Move movement logic to Mario class
+☐ Fix turtles spawns
+☐ Fix collisions arrays
+    ☐ Monsters collisions
+    ☐ Mario collisions
+☐ Fix Pow collision (only by bottom)
+☐ Add Pow animimations and uses
+☐ Fix Shake animation
+☐ Add turtle dead animation
+☐ Add clean stage event
+☐ Add change stage event
+☐ Add Mario lost lifes event
+☐ Add Mario new appear after dead
+☐ Add loading screen

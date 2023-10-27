@@ -56,7 +56,6 @@ function animate() {
   window.requestAnimationFrame(animate)
   ctx.fillStyle = '#000'
   ctx.fillRect(0, 0, canvas.width, canvas.height)
-
   stage.update()
 
   turtles.forEach(turtle => turtle.update())
@@ -70,7 +69,7 @@ function animate() {
   pow.update()
   mario.update()
   
-  /*  HANDLE MOVEMENTS START */
+  /* HANDLE MOVEMENTS START */
   mario.updateAnimation()
   
   mario.velocity.x = 0
@@ -89,8 +88,7 @@ function animate() {
       mario.direction == 0 && mario.status == 'alive'
       ) mario.setAnimation('idleLeft')
 
-  /*  HANDLE MOVEMENTS END */   
-
+  /* HANDLE MOVEMENTS END */   
 }
 
 powerBtn.addEventListener('click', e => {

@@ -20,13 +20,11 @@ class Mario {
       'idleRight': [{ x: 0, y: 0 }],
       'idleLeft': [{ x: this.width * 19, y: 0 }],
       'runRight': [
-        // { x: 0, y: 0 },
         { x: this.width, y: 0 },
         { x: this.width * 2, y: 0 },
         { x: this.width * 3, y: 0 },
       ],
       'runLeft': [
-        // { x: this.width * 19, y: 0 },
         { x: this.width * 18, y: 0 },
         { x: this.width * 17, y: 0 },
         { x: this.width * 16, y: 0 },
