@@ -38,7 +38,7 @@ class Mario {
     }
     this.frameIndex = 0
     this.currentAnimation = 'idleRight'
-    this.animationSpeed = 5
+    this.animationSpeed = 2
     this.animationCounter = 0
     this.direction = 1 // 1 right  -  0 left
     this.status = 'alive'
@@ -56,7 +56,6 @@ class Mario {
       }
     }
   }
-
 
   addEventListeners() {
     window.addEventListener('keydown', (e) => {
@@ -114,36 +113,6 @@ class Mario {
     });
   }
 
-  // handleMovement() {
-  //   this.velocity.x = 0;
-
-  //   if (this.pressedKeys.left) {
-  //     this.velocity.x = -1;
-  //   } else if (this.pressedKeys.right) {
-  //     this.velocity.x = 1;
-  //   }
-
-  //   if (this.pressedKeys.left && this.position.x <= 0 - this.width / 2) {
-  //     this.position.x = this.canvas.width;
-  //   } else if (this.pressedKeys.right && this.position.x >= this.canvas.width) {
-  //     this.position.x = 0;
-  //   }
-
-  //   if (
-  //     !this.pressedKeys.left && !this.pressedKeys.right && 
-  //     !this.pressedKeys.space && this.isOverFloor() && this.direction === 1 && 
-  //     this.status === 'alive'
-  //   ) {
-  //     this.setAnimation('idleRight');
-  //   } else if (
-  //     !this.pressedKeys.left && !this.pressedKeys.right && 
-  //     !this.pressedKeys.space && this.isOverFloor() && this.direction === 0 && 
-  //     this.status === 'alive'
-  //   ) {
-  //     this.setAnimation('idleLeft');
-  //   }
-  // }
-
   updateAnimation() {
     let animation = this.animations[this.currentAnimation]
     if (animation) {
@@ -184,29 +153,29 @@ class Mario {
     } 
     (this.isOverFloor() && this.status == 'alive') ? this.velocity.y = 0 : this.velocity.y += CONFIGS.GRAVITY
 
-    /* 
+    /*
     // MOVEMENT 
     this.velocity.x = 0;
 
-    if (this.pressedKeys.left) {
+    if (this.pressedKeys.left.pressed) {
       this.velocity.x = -2;
       this.setAnimation('runLeft');
       this.direction = 0;
-    } else if (this.pressedKeys.right) {
+    } else if (this.pressedKeys.right.pressed) {
       this.velocity.x = 2;
       this.setAnimation('runRight');
       this.direction = 1;
     }
-
-    if (this.pressedKeys.left && this.position.x <= 0 - this.width / 2) {
+    // ENABLE CHANE BETWEEN SIDES CROSSING SCREEN LIMITS
+    if (this.pressedKeys.left.pressed && this.position.x <= 0 - this.width / 2) {
       this.position.x = this.canvas.width;
-    } else if (this.pressedKeys.right && this.position.x >= this.canvas.width) {
+    } else if (this.pressedKeys.right.pressed && this.position.x >= this.canvas.width) {
       this.position.x = 0;
     }
-
+    // SET IDLE ANIMATION WHEN ANY KEY IS PRESSED
     if (
-      !this.pressedKeys.left && !this.pressedKeys.right &&
-      !this.pressedKeys.space && this.isOverFloor() &&
+      !this.pressedKeys.left.pressed && !this.pressedKeys.right.pressed &&
+      !this.pressedKeys.space.pressed && this.isOverFloor() &&
       this.status === 'alive'
     ) {
       if (this.direction === 1) {
@@ -217,19 +186,20 @@ class Mario {
     }
 
     // JUMP 
-    if (this.pressedKeys.space) {
+    if (this.pressedKeys.space.pressed) {
       if (!this.pressedKeys.space.pressed && this.direction === 0) this.setAnimation('jumpLeft');
       if (!this.pressedKeys.space.pressed && this.direction === 1) this.setAnimation('jumpRight');
       this.pressedKeys.space.pressed = true;
 
       if (this.isOverFloor() && this.position.y >= 0) {
-        if (this.position.y - CONFIGS.MARIO_JUMP >= 0) {
+        if (this.position.y - CONFIGS.MARIO_JUMP > 0) {
           this.velocity.y = -CONFIGS.MARIO_JUMP;
         } else {
           alert('No puedes saltar más alto');
         }
       }
     }
+    this.updateAnimation() 
     */
   }
 

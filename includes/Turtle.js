@@ -2,8 +2,6 @@ import Monster from "./Monster.js";
 import CONFIGS from "./Configs.js"
 import enemiesCollisions from "./EnemiesCollisions.js";
 
-
-
 class Turtle extends Monster {
   constructor(canvas, ctx, position, direction, mario, turtles) {
     super()
@@ -153,7 +151,6 @@ class Turtle extends Monster {
         this.frameIndex = (this.frameIndex + 1) % animation.length;
       }
     }
-    // console.log(animation);
   }
 
   setAnimation (animationName) {
@@ -194,11 +191,6 @@ class Turtle extends Monster {
   }
 
   checkStairs () {
-
-    // console.log(`
-    //   Turtle Y -> ${this.position.y}\n
-    //   Turtle X -> ${this.position.x}
-    // `);
 
     /* DOWN - RIGHT PIPE */
     if (this.position.y >= 360 && this.position.y <= 367 && this.position.x >= 445 && this.position.x <= 455) {
@@ -252,14 +244,9 @@ class Turtle extends Monster {
     if (
       this.position.y + this.height + this.velocity.y < this.canvas.height - CONFIGS.STAGE_FLOOR_HEIGHT
       )    (this.getCollisionValue(0)) ? this.velocity.y = 0 : this.velocity.y += CONFIGS.GRAVITY
-            // (this.getCollisionValue(3)) ? this.position.y - 8 : null           
     else this.velocity.y = 0
     if (!this.getCollisionValue(3)) this.position.y -= 8
-    // console.log(!this.getCollisionValue(3));
-    // console.log(`
-    // Turtle Y -> ${this.position.y}\n
-    // Turtle X -> ${this.position.x}
-    // `);
+  
     this.checkStairs()
   } 
   
