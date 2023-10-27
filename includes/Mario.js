@@ -183,7 +183,54 @@ class Mario {
       this.position.x += this.velocity.x
     } 
     (this.isOverFloor() && this.status == 'alive') ? this.velocity.y = 0 : this.velocity.y += CONFIGS.GRAVITY
-    // console.log(this.checkArrayValue((this.position.x + (this.width / 2)), (this.position.y)));
+
+    /* 
+    // MOVEMENT 
+    this.velocity.x = 0;
+
+    if (this.pressedKeys.left) {
+      this.velocity.x = -2;
+      this.setAnimation('runLeft');
+      this.direction = 0;
+    } else if (this.pressedKeys.right) {
+      this.velocity.x = 2;
+      this.setAnimation('runRight');
+      this.direction = 1;
+    }
+
+    if (this.pressedKeys.left && this.position.x <= 0 - this.width / 2) {
+      this.position.x = this.canvas.width;
+    } else if (this.pressedKeys.right && this.position.x >= this.canvas.width) {
+      this.position.x = 0;
+    }
+
+    if (
+      !this.pressedKeys.left && !this.pressedKeys.right &&
+      !this.pressedKeys.space && this.isOverFloor() &&
+      this.status === 'alive'
+    ) {
+      if (this.direction === 1) {
+        this.setAnimation('idleRight');
+      } else if (this.direction === 0) {
+        this.setAnimation('idleLeft');
+      }
+    }
+
+    // JUMP 
+    if (this.pressedKeys.space) {
+      if (!this.pressedKeys.space.pressed && this.direction === 0) this.setAnimation('jumpLeft');
+      if (!this.pressedKeys.space.pressed && this.direction === 1) this.setAnimation('jumpRight');
+      this.pressedKeys.space.pressed = true;
+
+      if (this.isOverFloor() && this.position.y >= 0) {
+        if (this.position.y - CONFIGS.MARIO_JUMP >= 0) {
+          this.velocity.y = -CONFIGS.MARIO_JUMP;
+        } else {
+          alert('No puedes saltar más alto');
+        }
+      }
+    }
+    */
   }
 
   killMario() {
@@ -230,7 +277,6 @@ class Mario {
   
     const arrayX = Math.floor(this.position.x / arraySize)
     const arrayY = Math.floor((this.position.y + this.height ) / arraySize)
-    // console.log(marioCollisions[arrayY][arrayX]);
     if (arrayY < arrayRows && arrayX < arrayColumns) {
       if (marioCollisions[arrayY][arrayX] === 0) {
         return false

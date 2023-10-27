@@ -9,11 +9,7 @@ class Monster {
       x: 10,
       y: 1,
     }   
-
   }
-
-
-
 }
 
 export default Monster

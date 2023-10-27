@@ -28,11 +28,20 @@ pipes.src = '../resources/sprites/stages/pipes.png'
 
 const mario = new Mario(canvas, ctx, marioSprite);
 
+
+const turtles = []
+const newTurtle = new Turtle(canvas, ctx, {
+  x: canvas.width - 130, 
+  y: 50
+}, 0, 0, mario, turtles);
+turtles.push(newTurtle)
+
+/*
 const turtle1 = new Turtle(canvas, ctx, {
   x: canvas.width - 130, 
   y: 50
-},0, mario);
-
+}, 0, 0, mario);
+*/
 const stage = new Stages(canvas, ctx, {
   x: 0,
   y: 0,
@@ -52,7 +61,8 @@ function animate() {
 
   stage.update()
 
-  turtle1.update()
+  // turtle1.update()
+  turtles.forEach(turtle => turtle.update())
 
   ctx.drawImage(
     pipes,

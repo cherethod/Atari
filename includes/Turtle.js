@@ -5,12 +5,14 @@ import enemiesCollisions from "./EnemiesCollisions.js";
 
 
 class Turtle extends Monster {
-  constructor(canvas, ctx, position, direction, mario) {
+  constructor(canvas, ctx, position, direction, id, mario, turtles) {
     super()
     this.position = position
     this.canvas = canvas
     this.ctx = ctx
+    this.id = id
     this.mario = mario
+    this.turtles = turtles
     this.width = 32
     this.height = 32
     this.velocity = {
@@ -75,14 +77,14 @@ class Turtle extends Monster {
     const marioTop = mario.position.y;
     const marioBottom = mario.position.y + mario.height;
   
+  if (this.status == 'normal') {
     if (this.direction === 0) { // Tortuga moviéndose hacia la izquierda
       // Comprueba si Mario golpea la tortuga desde la derecha
       if (
         marioRight > turtleLeft && // Colisión horizontal
         marioLeft < turtleLeft && // Mario a la izquierda de la tortuga
         marioBottom > turtleTop && // Colisión vertical desde arriba
-        marioTop < turtleBottom && // Colisión vertical desde abajo
-        this.status === 'normal'
+        marioTop < turtleBottom // Colisión vertical desde abajo
       ) {
         console.log('Golpe desde la derecha');
         mario.killMario()
@@ -92,8 +94,7 @@ class Turtle extends Monster {
         marioRight > turtleLeft && // Colisión horizontal
         marioLeft < turtleRight && // Mario a la izquierda de la tortuga
         marioBottom > turtleTop && // Colisión vertical desde arriba
-        marioTop < turtleBottom && // Colisión vertical desde abajo
-        this.status === 'normal'
+        marioTop < turtleBottom  // Colisión vertical desde abajo
       ) {
         console.log('Golpe en el caparazón');
         if (this.statusPaused === 0 && mario.status == 'alive') this.setStatus('flipped');
@@ -104,8 +105,7 @@ class Turtle extends Monster {
         marioLeft < turtleRight && // Colisión horizontal
         marioRight > turtleRight && // Mario a la derecha de la tortuga
         marioBottom > turtleTop && // Colisión vertical desde arriba
-        marioTop < turtleBottom && // Colisión vertical desde abajo
-        this.status === 'normal'
+        marioTop < turtleBottom // Colisión vertical desde abajo
       ) {
         console.log('Golpe desde la izquierda');
         mario.killMario()
@@ -116,13 +116,29 @@ class Turtle extends Monster {
         marioRight > turtleLeft && // Colisión horizontal
         marioLeft < turtleRight && // Mario a la izquierda de la tortuga
         marioBottom > turtleTop && // Colisión vertical desde arriba
-        marioTop < turtleBottom && // Colisión vertical desde abajo
-        this.status === 'normal'
+        marioTop < turtleBottom  // Colisión vertical desde abajo
       ) {
         console.log('Golpe en el caparazón');
         if (this.statusPaused === 0 && mario.status == 'alive') this.setStatus('flipped');
       }
     }
+  } else {
+    if (
+      marioRight > turtleLeft && // Colisión horizontal
+      marioLeft < turtleLeft && // Mario a la izquierda de la tortuga
+      marioBottom > turtleTop && // Colisión vertical desde arriba
+      marioTop < turtleBottom // Colisión vertical desde abajo
+    ) {
+      console.log('tortuga golpeada desde la derecha');
+    } else if (
+      marioLeft < turtleRight && // Colisión horizontal
+      marioRight > turtleRight && // Mario a la derecha de la tortuga
+      marioBottom > turtleTop && // Colisión vertical desde arriba
+      marioTop < turtleBottom // Colisión vertical desde abajo
+    ) {
+      console.log('tortuga golpeada desde la izquierda');
+    }
+  }
   }  
 
   updateAnimation() {
@@ -191,6 +207,13 @@ class Turtle extends Monster {
     if (this.position.y >= 360 && this.position.y <= 367 && this.position.x >= 11 && this.position.x <= 20) {
       this.position.x = this.canvas.width - (64 + this.width)
       this.position.y = 48
+    }
+  }
+
+  removeTurtle() {
+    const index = this.turtles.indexOf(this);
+    if (index !== -1) {
+      this.turtles.splice(index, 1);
     }
   }
 

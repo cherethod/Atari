@@ -17,8 +17,6 @@ class Pow {
     this.currentAnimation = 'full'
     this.frameIndex = 0
     this.status = 'normal'
-    // this.animationCounter = 0
-    // this.animationSpeed = 3
   }
 
   checkColision (mario) {
@@ -56,15 +54,6 @@ class Pow {
           }, 100);
         }
       }
-
-    // if (
-    //   (mario.position.x > powHitBoxStart &&
-    //     mario.position.x < powHitBoxEnd) &&
-    //   (mario.position.y > powHitBoxStart &&
-    //     mario.position.y < powHitBoxEnd)
-    //   ) {
-    //   console.log(TOCA)
-    // }
   }
 
   draw () {
