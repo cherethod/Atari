@@ -20,6 +20,7 @@ class Pow {
     this.frameIndex = 0
     this.status = 'normal'
     this.uses = 3
+    this.isInUse = false
   }
 
   checkColision (mario) {
@@ -34,9 +35,10 @@ class Pow {
     if (
       mario.status == 'alive' && mario.pressedKeys.space.pressed == true  && this.uses > 0 &&
       marioTop < powBottom && marioTop > powBottom - 10 && 
-      marioRight - mario.width / 3 > powLeft && marioLeft + mario.width / 3 < powRight
+      marioRight - mario.width / 3 > powLeft && marioLeft + mario.width / 3 < powRight && !this.isInUse
       ) {
       // alert(this.uses)
+      this.isInUse = true
       this.uses--
       this.currentAnimation--
       this.updateAnimation()

@@ -2,7 +2,7 @@ import Monster from "./Monster.js";
 // import CONFIGS from "./Configs.js"
 
 class Turtle extends Monster {
-  constructor(canvas, ctx, position, direction, mario, turtles) {
+  constructor(canvas, ctx, position, direction, mario, turtles, pow) {
     super(
       canvas,
       ctx,
@@ -10,8 +10,9 @@ class Turtle extends Monster {
       direction,
       mario,
       turtles,
+      pow,
       '../resources/sprites/enemies/turtle.png',
-      status
+      
     )
     // this.position = position
     // this.canvas = canvas
@@ -162,6 +163,7 @@ class Turtle extends Monster {
     this.statusPaused = (status === 'flipped') ? 1 : 0;
     if (this.status === 'flipped') {
       this.velocity.x = 0;
+      this.agro = false
       this.setAnimation(this.direction === 0 ? 'flippedLeft' : 'flippedRight');
       if (this.flipStatus) {
         clearTimeout(this.flipStatus); // Detener el temporizador anterior si existe
@@ -169,7 +171,9 @@ class Turtle extends Monster {
       this.flipStatus = setTimeout(() => {
         this.setAnimation((this.direction == 0) ? 'runLeft' : 'runRight')
         this.setStatus('normal')
-        this.velocity.x = 0.5        
+        this.velocity.x = 0.5    
+        this.agro = true    
+        this.pow.isInUse = false
       //   this.status = 'dead';
       //   this.velocity.x = 0; // Detener el movimiento en el eje X
       }, 10000);

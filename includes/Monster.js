@@ -2,13 +2,14 @@ import CONFIGS from "./Configs.js";
 import enemiesCollisions from "./EnemiesCollisions.js";
 
 class Monster {
-  constructor(canvas, ctx, position, direction, mario, turtles, spriteSrc) {
+  constructor(canvas, ctx, position, direction, mario, turtles, pow, spriteSrc) {
     this.canvas = canvas
     this.ctx = ctx
     this.position = position    
     this.direction = direction;
     this.mario = mario;
     this.turtles = turtles;
+    this.pow = pow
     this.sprite = new Image();
     this.sprite.src = spriteSrc;
     this.isAlive = true

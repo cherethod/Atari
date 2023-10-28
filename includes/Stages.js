@@ -28,29 +28,6 @@ class Stages {
     this.image.src = this.stages[this.currentStage]
   }
 
-  // generateEnemies = () => {
-  //   const randomSpawn = Math.random()
-  //   let direction = (randomSpawn >= (1 - randomSpawn)) ? 0 : 1
-  //     const newTurtle = new Turtle(canvas, ctx, {
-  //       x: (direction == 0) ? canvas.width - 96 : 64,
-  //       y: 48
-  //     }, direction, mario, turtles)
-  //     turtles.push(newTurtle)
-  // }
-
-  // spawnEnemies () {
-  //   if (this.enemiesRemain > 0) {
-  //     generateEnemies()
-  //     console.log(this.enemiesRemain);
-  //     this.enemiesRemain--
-  //     setTimeout(() => {
-  //       spawnEnemies()
-  //     }, this.spawnInterval[this.currentStage]);
-  //   }
-  // }
-  
-  
-
 
   draw () {
     if (!this.image) return

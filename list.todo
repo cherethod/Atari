@@ -3,16 +3,19 @@
 ✔ Fix collisions arrays @started(23-10-28 12:30) @done(23-10-28 12:37) @lasted(7m35s)
     ✔ Monsters collisions @done(23-10-28 12:30)
     ✔ Mario collisions @done(23-10-28 12:37)
-☐ Fix turtle status logic @started(23-10-28 16:26) -> Chere
+✔ Fix turtle status logic @started(23-10-28 16:26) -> Chere @done(23-10-28 16:57) @lasted(31m41s)
 ✔ Fix Pow collision (only by bottom) @done(23-10-28 12:58)
-☐ Add Pow animimations and uses @started(23-10-28 13:20) -> Chere
+✔ Add Pow animimations and uses @started(23-10-28 13:20) -> Chere @done(23-10-28 16:57) @lasted(3h37m47s)
 ✘ Fix Shake animation @cancelled(23-10-28 16:27)
 ☐ Add turtle dead animation @started(23-10-27 23:10) -> Chere
-☐ Fix spawn enemies delay
 ☐ Move spawn enemies logic to stages object
 ☐ Add clean stage event
 ☐ Add change stage event
 ☐ Add Mario lost lifes event
 ☐ Add Mario new appear after dead
 ☐ Add loading screen
+
+AFTER FINISH ALPHA
+☐ Fix spawn enemies delay
 ☐ Fix turtle sprite (seems like a image was moved 1 pixel to the left)
+☐ Fix collision issues (Pow, outside canvas, some platforms)

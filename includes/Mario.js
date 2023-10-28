@@ -57,8 +57,67 @@ class Mario {
     this.marioCollisions = marioCollisions
   }
 
+  // addEventListeners() {
+  //   window.addEventListener('keydown', (e) => {
+  //     if (this.status === 'alive') {
+  //       switch (e.code) {
+  //         case 'KeyA':
+  //         case 'ArrowLeft':
+  //           if (!this.pressedKeys.left.pressed) this.setAnimation('runLeft');
+  //           this.pressedKeys.left.pressed = true;
+  //           this.direction = 0;
+  //           break;
+  //         case 'KeyD':
+  //         case 'ArrowRight':
+  //           if (!this.pressedKeys.right.pressed) this.setAnimation('runRight');
+  //           this.pressedKeys.right.pressed = true;
+  //           this.direction = 1;
+  //           break;
+  //         case 'Space':
+  //           if (!this.pressedKeys.space.pressed && this.direction === 0) this.setAnimation('jumpLeft');
+  //           if (!this.pressedKeys.space.pressed && this.direction === 1) this.setAnimation('jumpRight');
+  //           this.pressedKeys.space.pressed = true;
+  //           this.jumpSize =  (this.checkJumpCollision() < CONFIGS.MARIO_JUMP) ? this.checkJumpCollision() : CONFIGS.MARIO_JUMP
+  //           if (this.isOverFloor() && Math.round(this.position.y) >= 0) {
+              
+              
+  //             if (Math.round(this.position.y) - this.jumpSize >= 0) {
+  //               this.velocity.y = -this.jumpSize;
+  //             } else if (Math.round(Math.round(this.position.y)) - this.jumpSize < 0) {
+  //               alert('Cannot jump any higher');
+  //             }
+  //           }
+  //           break;
+  //         default: 
+  //           break;
+  //       }
+  //     }
+  //   });
+
+  //   window.addEventListener('keyup', (e) => {
+  //     if (this.status === 'alive') {
+  //       switch (e.code) {
+  //         case 'KeyA':
+  //         case 'ArrowLeft':
+  //           this.pressedKeys.left.pressed = false;
+  //           break;
+  //         case 'KeyD':
+  //         case 'ArrowRight':
+  //           this.pressedKeys.right.pressed = false;
+  //           break;
+  //         case 'Space':
+  //           this.pressedKeys.space.pressed = false;
+  //           break;
+  //         default:
+  //           break;
+  //       }
+  //     }
+  //   });
+  // }
+
+
   addEventListeners() {
-    window.addEventListener('keydown', (e) => {
+    this.keyDownListener = (e) => {
       if (this.status === 'alive') {
         switch (e.code) {
           case 'KeyA':
@@ -77,10 +136,8 @@ class Mario {
             if (!this.pressedKeys.space.pressed && this.direction === 0) this.setAnimation('jumpLeft');
             if (!this.pressedKeys.space.pressed && this.direction === 1) this.setAnimation('jumpRight');
             this.pressedKeys.space.pressed = true;
-            this.jumpSize =  (this.checkJumpCollision() < CONFIGS.MARIO_JUMP) ? this.checkJumpCollision() : CONFIGS.MARIO_JUMP
+            this.jumpSize =  (this.checkJumpCollision() < CONFIGS.MARIO_JUMP) ? this.checkJumpCollision() : CONFIGS.MARIO_JUMP;
             if (this.isOverFloor() && Math.round(this.position.y) >= 0) {
-              
-              
               if (Math.round(this.position.y) - this.jumpSize >= 0) {
                 this.velocity.y = -this.jumpSize;
               } else if (Math.round(Math.round(this.position.y)) - this.jumpSize < 0) {
@@ -92,9 +149,11 @@ class Mario {
             break;
         }
       }
-    });
+    };
 
-    window.addEventListener('keyup', (e) => {
+    window.addEventListener('keydown', this.keyDownListener);
+
+    this.keyUpListener = (e) => {
       if (this.status === 'alive') {
         switch (e.code) {
           case 'KeyA':
@@ -112,8 +171,17 @@ class Mario {
             break;
         }
       }
-    });
+    };
+
+    window.addEventListener('keyup', this.keyUpListener);
   }
+
+  removeEventListeners() {
+    window.removeEventListener('keydown', this.keyDownListener);
+    window.removeEventListener('keyup', this.keyUpListener);
+  }
+
+
 
   updateAnimation() {
     let animation = this.animations[this.currentAnimation]
