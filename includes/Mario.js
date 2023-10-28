@@ -53,6 +53,7 @@ class Mario {
         pressed: false
       }
     }
+    this.marioCollisions = marioCollisions
   }
 
   addEventListeners() {
@@ -189,7 +190,7 @@ class Mario {
       
     }
    }
-   
+
    deadAnimation() {
     this.setAnimation('fall')
     this.velocity.y = 0.5
@@ -205,27 +206,27 @@ class Mario {
   }
 
   checkArrayValue(posX, posY) {
-    const arrayColumns = marioCollisions[0].length
-    const arrayRows = marioCollisions.length
+    const arrayColumns = this.marioCollisions[0].length
+    const arrayRows = this.marioCollisions.length
     const arraySize = 8 
     const arrayX = Math.floor(posX / arraySize)
     const arrayY = Math.floor(posY / arraySize)
     if (arrayY < arrayRows && arrayX < arrayColumns) {   
-      if (marioCollisions[arrayY][arrayX] != undefined) {  
-        return marioCollisions[arrayY][arrayX] 
+      if (this.marioCollisions[arrayY][arrayX] != undefined) {  
+        return this.marioCollisions[arrayY][arrayX] 
       }
     }
   }
 
   isOverFloor() {
-    const arrayColumns = marioCollisions[0].length
-    const arrayRows = marioCollisions.length
+    const arrayColumns = this.marioCollisions[0].length
+    const arrayRows = this.marioCollisions.length
     const arraySize = 8  
   
     const arrayX = Math.floor(this.position.x / arraySize)
     const arrayY = Math.floor((this.position.y + this.height ) / arraySize)
     if (arrayY < arrayRows && arrayX < arrayColumns) {
-      if (marioCollisions[arrayY][arrayX] === 0) {
+      if (this.marioCollisions[arrayY][arrayX] === 0) {
         return false
       }
     }

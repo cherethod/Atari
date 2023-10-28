@@ -11,51 +11,44 @@ class Pow {
     this.sprite.src = '../resources/sprites/stages/Pow.png'
     this.uses = 3
     this.animations = {
-      'full': [{x: 0 , y: 0}],
-      'mid': [{x: this.width , y: 0}],
-      'last': [{x: this.width * 2  , y: 0}],
+      3: [{x: 0 , y: 0}],
+      2: [{x: this.width , y: 0}],
+      1: [{x: this.width * 2  , y: 0}],
+      0: [{x: this.width * 3, y: 0}]
     }
-    this.currentAnimation = 'full'
+    this.currentAnimation = 3
     this.frameIndex = 0
     this.status = 'normal'
+    this.uses = 3
   }
 
   checkColision (mario) {
-    const powHitBoxStart = {
-      x: this.position.x,
-      y: this.position.y
-    }
-    const powHitBoxEnd = {
-      x: this.position.x + this.width,
-      y: this.position.y + this.height
-    }
-    
+    const powLeft = this.position.x
+    const powRight = this.position.x + this.width
+    const powBottom = this.position.y + this.height // height must be decreased when lost uses
+
+    const marioLeft = mario.position.x;
+    const marioRight = mario.position.x + mario.width;
+    const marioTop = mario.position.y;
+
     if (
-          (
-            mario.position.x + mario.width > powHitBoxStart.x &&       
-            mario.position.x < powHitBoxEnd.x
-          ) &&
-  
-          (
-            (
-              mario.position.y + mario.height > powHitBoxStart.y &&
-              mario.position.y + mario.height < powHitBoxEnd.y
-            ) || (
-              mario.position.y < powHitBoxEnd.y &&
-              mario.position.y >= powHitBoxStart.y
-            )
-          )
-        ) {
-        console.log('HIT desde derecha')
-        if (this.status == 'normal' && mario.status == 'alive') {
-        //   this.status = 'shacking'
-        //   this.preShake()
-        //   setInterval(() => {
-        //     this.postShake()
-        //   }, 100);
-          this.turtles.forEach(turtle => turtle.setStatus('flipped'))
+      mario.status == 'alive' && mario.pressedKeys.space.pressed == true  && this.uses > 0 &&
+      marioTop < powBottom && marioTop > powBottom - 10 && 
+      marioRight - mario.width / 3 > powLeft && marioLeft + mario.width / 3 < powRight
+      ) {
+      alert(this.uses)
+      this.uses--
+      this.currentAnimation--
+      this.updateAnimation()
+      
+      if (this.uses === 0) {
+        for (let i = 0; i < mario.marioCollisions.length; i++) {
+          for (let j = 0; j < mario.marioCollisions[i].length; j++) {
+            if (mario.marioCollisions[i][j] === 4) mario.marioCollisions[i][j] = 0
+          }          
         }
       }
+    } 
   }
 
   draw () {
@@ -86,6 +79,13 @@ class Pow {
 
   updateAnimation() {
     let animation = this.animations[this.currentAnimation];
+    if (animation) {
+      this.animationCounter++;
+      if (this.animationCounter >= this.animationSpeed) {
+        this.animationCounter = 0;
+        this.frameIndex = (this.frameIndex + 1) % animation.length;
+      }
+    }
   }
 
   update () {

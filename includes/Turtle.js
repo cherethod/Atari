@@ -151,7 +151,7 @@ class Turtle extends Monster {
   }  
 
 
-
+/* Corregir logica de estados */
   setStatus(status) {
     this.status = status;
     this.statusPaused = status === 'flipped' ? 1 : 0;
