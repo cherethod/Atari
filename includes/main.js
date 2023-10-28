@@ -60,27 +60,6 @@ function animate() {
 
   pow.update()
   mario.update()
-  
-  /* HANDLE MOVEMENTS START */
-  // mario.updateAnimation()
-  
-  // mario.velocity.x = 0
-  // if (mario.pressedKeys.left.pressed) mario.velocity.x = -1
-  // else if (mario.pressedKeys.right.pressed) mario.velocity.x = 1
-  // if (mario.pressedKeys.left.pressed && mario.position.x <= 0 - mario.width /2) mario.position.x = canvas.width
-  // else if (mario.pressedKeys.right.pressed && mario.position.x >= canvas.width) mario.position.x = 0
-  // if (
-  //   !mario.pressedKeys.left.pressed && !mario.pressedKeys.right.pressed && 
-  //   !mario.pressedKeys.space.pressed && mario.isOverFloor() && mario.direction == 1 && 
-  //   mario.status == 'alive'
-  //   ) mario.setAnimation('idleRight')
-  //   else if (
-  //     !mario.pressedKeys.left.pressed && !mario.pressedKeys.right.pressed 
-  //     && !mario.pressedKeys.space.pressed && mario.isOverFloor() && 
-  //     mario.direction == 0 && mario.status == 'alive'
-  //     ) mario.setAnimation('idleLeft')
-
-  /* HANDLE MOVEMENTS END */   
 }
 
 powerBtn.addEventListener('click', e => {

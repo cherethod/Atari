@@ -47,12 +47,12 @@ class Pow {
           )
         ) {
         console.log('HIT desde derecha')
-        if (this.status == 'normal') {
-          this.status = 'shacking'
-          this.preShake()
-          setInterval(() => {
-            this.postShake()
-          }, 100);
+        if (this.status == 'normal' && mario.status == 'alive') {
+        //   this.status = 'shacking'
+        //   this.preShake()
+        //   setInterval(() => {
+        //     this.postShake()
+        //   }, 100);
           this.turtles.forEach(turtle => turtle.setStatus('flipped'))
         }
       }

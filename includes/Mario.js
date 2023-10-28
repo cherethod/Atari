@@ -127,10 +127,11 @@ class Mario {
     this.currentAnimation = animationName
     this.animationCounter = 0
   }
+
   fixPositions () {
     // this should fix ** que mario se meta dentro de las texturas de los suelos
-    if (this.position.y >= 370) this.position.y = 367 // fix mario se mete en el suelo de abajo
-    if (this.position.y <= 0) this.position.y = 0 // mario no puede saltar mas del limite superior de la pantalla
+    if (this.position.y >= 370 && this.status == 'alive') this.position.y = 367 // fix mario se mete en el suelo de abajo
+    if (this.position.y <= 0 && this.status == 'alive') this.position.y = 0 // mario no puede saltar mas del limite superior de la pantalla
     if (this.pressedKeys.left.pressed && this.position.x <= 0 - this.width /2) this.position.x = canvas.width
     else if (this.pressedKeys.right.pressed && this.position.x >= canvas.width) this.position.x = 0
   }
@@ -175,56 +176,7 @@ class Mario {
         !this.pressedKeys.left.pressed && !this.pressedKeys.right.pressed 
         && !this.pressedKeys.space.pressed && this.isOverFloor() && 
         this.direction == 0 && this.status == 'alive'
-        ) this.setAnimation('idleLeft')
-  
-    /*
-    // MOVEMENT 
-    this.velocity.x = 0;
-
-    if (this.pressedKeys.left.pressed) {
-      this.velocity.x = -2;
-      this.setAnimation('runLeft');
-      this.direction = 0;
-    } else if (this.pressedKeys.right.pressed) {
-      this.velocity.x = 2;
-      this.setAnimation('runRight');
-      this.direction = 1;
-    }
-    // ENABLE CHANE BETWEEN SIDES CROSSING SCREEN LIMITS
-    if (this.pressedKeys.left.pressed && this.position.x <= 0 - this.width / 2) {
-      this.position.x = this.canvas.width;
-    } else if (this.pressedKeys.right.pressed && this.position.x >= this.canvas.width) {
-      this.position.x = 0;
-    }
-    // SET IDLE ANIMATION WHEN ANY KEY IS PRESSED
-    if (
-      !this.pressedKeys.left.pressed && !this.pressedKeys.right.pressed &&
-      !this.pressedKeys.space.pressed && this.isOverFloor() &&
-      this.status === 'alive'
-    ) {
-      if (this.direction === 1) {
-        this.setAnimation('idleRight');
-      } else if (this.direction === 0) {
-        this.setAnimation('idleLeft');
-      }
-    }
-
-    // JUMP 
-    if (this.pressedKeys.space.pressed) {
-      if (!this.pressedKeys.space.pressed && this.direction === 0) this.setAnimation('jumpLeft');
-      if (!this.pressedKeys.space.pressed && this.direction === 1) this.setAnimation('jumpRight');
-      this.pressedKeys.space.pressed = true;
-
-      if (this.isOverFloor() && this.position.y >= 0) {
-        if (this.position.y - CONFIGS.MARIO_JUMP > 0) {
-          this.velocity.y = -CONFIGS.MARIO_JUMP;
-        } else {
-          alert('No puedes saltar más alto');
-        }
-      }
-    }
-    this.updateAnimation() 
-    */
+        ) this.setAnimation('idleLeft')   
   }
 
   killMario() {
@@ -237,6 +189,7 @@ class Mario {
       
     }
    }
+   
    deadAnimation() {
     this.setAnimation('fall')
     this.velocity.y = 0.5

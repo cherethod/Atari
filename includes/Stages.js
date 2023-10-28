@@ -12,7 +12,7 @@ class Stages {
       3: '../resources/sprites/stages/stage3.png',
     }
     this.enemiesCount = {
-      1: 1,
+      1: 1, // set to 10 when dev status has been finished
       2: 15,
       3: 20
     }
