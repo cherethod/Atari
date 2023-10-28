@@ -36,7 +36,7 @@ class Mario {
     }
     this.frameIndex = 0
     this.currentAnimation = 'idleRight'
-    this.animationSpeed = 2
+    this.animationSpeed = 5
     this.animationCounter = 0
     this.direction = 1 // 1 right  -  0 left
     this.status = 'alive'
@@ -76,10 +76,10 @@ class Mario {
             if (!this.pressedKeys.space.pressed && this.direction === 1) this.setAnimation('jumpRight');
             this.pressedKeys.space.pressed = true;
 
-            if (this.isOverFloor() && this.position.y >= 0) {
-              if (this.position.y - CONFIGS.MARIO_JUMP >= 0) {
+            if (this.isOverFloor() && Math.round(this.position.y) >= 0) {
+              if (Math.round(this.position.y) - CONFIGS.MARIO_JUMP >= 0) {
                 this.velocity.y = -CONFIGS.MARIO_JUMP;
-              } else if (this.position.y - CONFIGS.MARIO_JUMP < 0) {
+              } else if (Math.round(Math.round(this.position.y)) - CONFIGS.MARIO_JUMP < 0) {
                 alert('Cannot jump any higher');
               }
             }
@@ -127,6 +127,13 @@ class Mario {
     this.currentAnimation = animationName
     this.animationCounter = 0
   }
+  fixPositions () {
+    // this should fix ** que mario se meta dentro de las texturas de los suelos
+    if (this.position.y >= 370) this.position.y = 367 // fix mario se mete en el suelo de abajo
+    if (this.position.y <= 0) this.position.y = 0 // mario no puede saltar mas del limite superior de la pantalla
+    if (this.pressedKeys.left.pressed && this.position.x <= 0 - this.width /2) this.position.x = canvas.width
+    else if (this.pressedKeys.right.pressed && this.position.x >= canvas.width) this.position.x = 0
+  }
 
   draw() {
   this.ctx.drawImage(
@@ -136,7 +143,7 @@ class Mario {
       this.width, // Sprite width
       this.height, // Sprite height
       this.position.x, // Position X in canvas
-      this.position.y, // Position Y in canvas
+      Math.round(this.position.y), // Position Y in canvas
       this.width, // Ni puta idea por qué repetimos ancho
       this.height // Ni puta idea por qué repetimos alto
     )
@@ -144,13 +151,32 @@ class Mario {
 
   update() {
     this.draw()
+    // console.log(`
+    // Mario Y -> ${this.position.y}\n
+    // Mario X -> ${this.position.x}`);
     // Gravity system (more or less)
     if (this.status == 'alive') {
       this.position.y += this.velocity.y
       this.position.x += this.velocity.x
     } 
     (this.isOverFloor() && this.status == 'alive') ? this.velocity.y = 0 : this.velocity.y += CONFIGS.GRAVITY
+    this.fixPositions()
+    this.updateAnimation()
+    this.velocity.x = 0
 
+    if (this.pressedKeys.left.pressed) this.velocity.x = -1
+    else if (this.pressedKeys.right.pressed) this.velocity.x = 1
+    if (
+      !this.pressedKeys.left.pressed && !this.pressedKeys.right.pressed && 
+      !this.pressedKeys.space.pressed && this.isOverFloor() && this.direction == 1 && 
+      this.status == 'alive'
+      ) this.setAnimation('idleRight')
+      else if (
+        !this.pressedKeys.left.pressed && !this.pressedKeys.right.pressed 
+        && !this.pressedKeys.space.pressed && this.isOverFloor() && 
+        this.direction == 0 && this.status == 'alive'
+        ) this.setAnimation('idleLeft')
+  
     /*
     // MOVEMENT 
     this.velocity.x = 0;

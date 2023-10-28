@@ -1,25 +1,32 @@
 import Monster from "./Monster.js";
-import CONFIGS from "./Configs.js"
-import enemiesCollisions from "./EnemiesCollisions.js";
+// import CONFIGS from "./Configs.js"
 
 class Turtle extends Monster {
   constructor(canvas, ctx, position, direction, mario, turtles) {
-    super()
-    this.position = position
-    this.canvas = canvas
-    this.ctx = ctx
-    // this.id = id
-    this.mario = mario
-    this.turtles = turtles
+    super(
+      canvas,
+      ctx,
+      position,
+      direction,
+      mario,
+      turtles,
+      '../resources/sprites/enemies/turtle.png'
+    )
+    // this.position = position
+    // this.canvas = canvas
+    // this.ctx = ctx
+    // // this.id = id
+    // this.mario = mario
+    // this.turtles = turtles
     this.width = 32
     this.height = 32
     this.velocity = {
-      x: 1,
+      x: 0.5,
       y: 1,
       flipped: 20
     }
-    this.sprite = new Image()
-    this.sprite.src = '../resources/sprites/enemies/turtle.png'
+    // this.sprite = new Image()
+    // this.sprite.src = '../resources/sprites/enemies/turtle.png'
     this.direction = direction // 1 right  -  0 left 
     this.animations = {
       'idleLeft': [{x: 0, y: 0}],
@@ -51,8 +58,8 @@ class Turtle extends Monster {
         {x: this.width * 13, y: 0},
       ],
       'shell': [
-        {x: this.width * 19, y: 0},
-        {x: this.width * 19 + 8, y: 0},
+        {x: this.width * 20, y: 0},
+        {x: this.width * 21, y: 0},
 
       ]
     }
@@ -60,6 +67,7 @@ class Turtle extends Monster {
     this.currentAnimation = (this.direction == 1) ? 'runRight' : 'runLeft'
     this.animationSpeed = 15;
     this.animationCounter = 0;
+    this.flipStatus = null
     this.status = 'normal'
     this.statusPaused = 0
     this.isAlive = true
@@ -129,7 +137,7 @@ class Turtle extends Monster {
       marioTop < turtleBottom // Colisión vertical desde abajo
     ) {
       console.log('tortuga golpeada desde la derecha');
-      this.removeTurtle()
+      this.killTurtle()
     } else if (
       marioLeft < turtleRight && // Colisión horizontal
       marioRight > turtleRight && // Mario a la derecha de la tortuga
@@ -137,71 +145,27 @@ class Turtle extends Monster {
       marioTop < turtleBottom // Colisión vertical desde abajo
     ) {
       console.log('tortuga golpeada desde la izquierda');
-      this.removeTurtle()
+      this.killTurtle()
     }
   }
   }  
 
-  updateAnimation() {
-    let animation = this.animations[this.currentAnimation];
-    if (animation) {
-      this.animationCounter++;
-      if (this.animationCounter >= this.animationSpeed) {
-        this.animationCounter = 0;
-        this.frameIndex = (this.frameIndex + 1) % animation.length;
+
+
+  setStatus(status) {
+    this.status = status;
+    this.statusPaused = status === 'flipped' ? 1 : 0;
+    if (this.status === 'flipped') {
+      this.velocity.x = 0;
+      this.setAnimation(this.direction === 0 ? 'flippedLeft' : 'flippedRight');
+      if (this.flipStatus) {
+        clearTimeout(this.flipStatus); // Detener el temporizador anterior si existe
       }
-    }
-  }
-
-  setAnimation (animationName) {
-    this.frameIndex = 0
-    this.currentAnimation = animationName
-    this.animationCounter = 0
-  }
-
-  setStatus (status) {
-    this.status = status
-    this.statusPaused = (this.status == 'flipped') ?  1 : 0
-    if (this.status == 'flipped') {
-      this.velocity.x = 0
-      this.setAnimation ((this.direction == 0) ? 'flippedLeft' : 'flippedRight')
-      setTimeout(() => {
-        this.status = 'normal';
-        this.statusPaused = 0
-        this.setAnimation ((this.direction == 0) ? 'runLeft' : 'runRight')
-        this.velocity.x = 1
+      this.flipStatus = setTimeout(() => {
+        this.setAnimation('shell');
+        this.status = 'dead';
+        this.velocity.x = 0; // Detener el movimiento en el eje X
       }, 10000);
-    }
-  }  
-
-  getCollisionValue (value) {
-    const arrayColumns = enemiesCollisions[0].length
-    const arrayRows = enemiesCollisions.length
-    const arraySize = 8
-
-    const arrayX = Math.floor(this.position.x / arraySize)
-    const arrayY = Math.floor((this.position.y + this.height) / arraySize)
-
-    if (arrayY < arrayRows && arrayX < arrayColumns) {
-      if (enemiesCollisions[arrayY][arrayX] === value) {
-        return false
-      }
-    }
-    return true
-  }
-
-  checkStairs () {
-
-    /* DOWN - RIGHT PIPE */
-    if (this.position.y >= 360 && this.position.y <= 367 && this.position.x >= 445 && this.position.x <= 455) {
-      this.position.x = 64
-      this.position.y = 48
-    }
-
-    /* DOWN - LEFT PIPE */    
-    if (this.position.y >= 360 && this.position.y <= 367 && this.position.x >= 11 && this.position.x <= 20) {
-      this.position.x = this.canvas.width - (64 + this.width)
-      this.position.y = 48
     }
   }
 
@@ -212,44 +176,31 @@ class Turtle extends Monster {
     }
   }
 
-  draw () {
-    this.ctx.drawImage(
-      this.sprite,
-      this.animations[this.currentAnimation][this.frameIndex].x,
-      this.animations[this.currentAnimation][this.frameIndex].y,
-      this.width,
-      this.height,
-      this.position.x,
-      this.position.y,
-      this.width,
-      this.height,
-    )
+  deadAnimation() {
+    this.setAnimation('shell')
+    this.velocity.y = 0.5
+    const finalY = this.canvas.height + this.height * 5
+  
+    const fallInterval = setInterval(() => {
+      this.position.y += this.velocity.y
+      if (this.position.y >= finalY) {
+        clearInterval(fallInterval)
+      }
+    }, 1000 / 60)
   }
-
-  update () {
-    this.checkCollision(this.mario)
-    this.updateAnimation()
-    this.draw()    
-    if (this.position.x < 0) {
-      this.direction = 1;
-      this.setAnimation ('runRight');
-    } 
-    if (this.position.x > this.canvas.width - this.width) {
-      this.direction = 0;
-      this.setAnimation ('runLeft');
-    }
-
-  (this.direction == 1) ? this.position.x += this.velocity.x : this.position.x -= this.velocity.x    
-    this.position.y += this.velocity.y
-    if (
-      this.position.y + this.height + this.velocity.y < this.canvas.height - CONFIGS.STAGE_FLOOR_HEIGHT
-      )    (this.getCollisionValue(0)) ? this.velocity.y = 0 : this.velocity.y += CONFIGS.GRAVITY
-    else this.velocity.y = 0
-    if (!this.getCollisionValue(3)) this.position.y -= 8
   
-    this.checkStairs()
-  } 
-  
+  killTurtle () {
+    this.isAlive = false
+    this.statusPaused = 1
+    this.velocity.x = 0
+    clearTimeout(this.flipStatus)
+    this.setAnimation('shell')
+    this.setStatus('dead')
+    this.deadAnimation()
+    setTimeout(() => {
+      this.removeTurtle()
+    }, 10000);
+  }
 }
 
 

@@ -34,22 +34,14 @@ const turtles = []
 const stage = new Stages(canvas, ctx, {
   x: 0,
   y: 0,
-});
+}, mario, turtles);
 
 const pow = new Pow(canvas, ctx, {
   x: 240,
   y: 320
 }, mario, turtles);
 
-const generateEnemies = async () => {
-    const randomSpawn = Math.random()
-    let direction = (randomSpawn >= (1 - randomSpawn)) ? 0 : 1
-      const newTurtle = new Turtle(canvas, ctx, {
-        x: (direction == 0) ? canvas.width - 96 : 64,
-        y: 48
-      }, direction, mario, turtles)
-      turtles.push(newTurtle)
-}
+
 
 //  * Animate loop
 function animate() {
@@ -70,23 +62,23 @@ function animate() {
   mario.update()
   
   /* HANDLE MOVEMENTS START */
-  mario.updateAnimation()
+  // mario.updateAnimation()
   
-  mario.velocity.x = 0
-  if (mario.pressedKeys.left.pressed) mario.velocity.x = -2
-  else if (mario.pressedKeys.right.pressed) mario.velocity.x = 2
-  if (mario.pressedKeys.left.pressed && mario.position.x <= 0 - mario.width /2) mario.position.x = canvas.width
-  else if (mario.pressedKeys.right.pressed && mario.position.x >= canvas.width) mario.position.x = 0
-  if (
-    !mario.pressedKeys.left.pressed && !mario.pressedKeys.right.pressed && 
-    !mario.pressedKeys.space.pressed && mario.isOverFloor() && mario.direction == 1 && 
-    mario.status == 'alive'
-    ) mario.setAnimation('idleRight')
-    else if (
-      !mario.pressedKeys.left.pressed && !mario.pressedKeys.right.pressed 
-      && !mario.pressedKeys.space.pressed && mario.isOverFloor() && 
-      mario.direction == 0 && mario.status == 'alive'
-      ) mario.setAnimation('idleLeft')
+  // mario.velocity.x = 0
+  // if (mario.pressedKeys.left.pressed) mario.velocity.x = -1
+  // else if (mario.pressedKeys.right.pressed) mario.velocity.x = 1
+  // if (mario.pressedKeys.left.pressed && mario.position.x <= 0 - mario.width /2) mario.position.x = canvas.width
+  // else if (mario.pressedKeys.right.pressed && mario.position.x >= canvas.width) mario.position.x = 0
+  // if (
+  //   !mario.pressedKeys.left.pressed && !mario.pressedKeys.right.pressed && 
+  //   !mario.pressedKeys.space.pressed && mario.isOverFloor() && mario.direction == 1 && 
+  //   mario.status == 'alive'
+  //   ) mario.setAnimation('idleRight')
+  //   else if (
+  //     !mario.pressedKeys.left.pressed && !mario.pressedKeys.right.pressed 
+  //     && !mario.pressedKeys.space.pressed && mario.isOverFloor() && 
+  //     mario.direction == 0 && mario.status == 'alive'
+  //     ) mario.setAnimation('idleLeft')
 
   /* HANDLE MOVEMENTS END */   
 }
@@ -101,6 +93,7 @@ powerBtn.addEventListener('click', e => {
 powerBtn.click()
 animate()
 mario.addEventListeners()
+// stage.spawnEnemies()
 let enemiesCount;
 switch (stage.currentStage) {
   case 1:
@@ -116,12 +109,32 @@ switch (stage.currentStage) {
     break;
 }
 
-for (let i = 0; i < enemiesCount; i++) {
-  console.log(enemiesCount);
-  await generateEnemies()
-  enemiesCount -= 1
-  setInterval(() => {
-    
-  }, 5000);
+const generateEnemies = async () => {
+  const randomSpawn = Math.random()
+  let direction = (randomSpawn >= (1 - randomSpawn)) ? 0 : 1
+    const newTurtle = new Turtle(canvas, ctx, {
+      x: (direction == 0) ? canvas.width - 96 : 64,
+      y: 48
+    }, direction, mario, turtles)
+    turtles.push(newTurtle)
 }
+
+const spawnDelay = 2000
+const spawnInterval = 5000
+let enemiesRemain = stage.enemiesCount[stage.currentStage]
+const spawnEnemies = () => {
+  if (enemiesRemain > 0) {
+    generateEnemies()
+    console.log(enemiesRemain);
+    enemiesRemain--
+    setTimeout(() => {
+      spawnEnemies()
+    }, spawnInterval);
+  }
+}
+setTimeout(() => {
+  spawnEnemies()
+}, spawnDelay);
+
+
 
