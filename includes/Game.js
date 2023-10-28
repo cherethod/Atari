@@ -26,8 +26,9 @@ class Game {
       0: [this.canvas.height / 2 + 73],
       1: [this.canvas.height / 2 + 105]
     }
-
     this.selectorIndex = 0
+    this.mainTheme = document.querySelector('#background-music')
+    this.fxSounds =  document.querySelector('#effect-sounds')
     this.stage = new Stages(this.canvas, this.ctx, {
       x: 0,
       y: 0,
@@ -39,7 +40,9 @@ class Game {
     
     this.gameMode = 'off'
     this.keyboardType = 1  // 0 -> (A - D - W - S) -- 1 -> ARROWS (LEFT - RIGHT - UP - DOWN )
-    
+    this.playerLives = 5
+    this.liveImg = new Image()
+    this.liveImg.src = '../resources/sprites/ui/live.png'
   }
 
 
@@ -52,6 +55,9 @@ class Game {
     this.keyUpListener = (e) => {
       console.log(e.code);
       if(e.code == 'KeyS' || e.code == 'ArrowDown') {
+        this.fxSounds.src = '../resources/sounds/menu_down.mp3'
+        this.fxSounds.pause()
+        this.fxSounds.play()
         switch (this.selectorIndex) {
           case 0:
             this.selectorIndex++            
@@ -64,6 +70,10 @@ class Game {
         }
       }
       if(e.code == 'KeyW' || e.code == 'ArrowUp') {
+        this.fxSounds.src = '../resources/sounds/menu_up.mp3'
+        this.fxSounds.pause()
+        this.fxSounds.play()
+        
         switch (this.selectorIndex) {
           case 0:
             this.selectorIndex = 1           
@@ -136,6 +146,8 @@ class Game {
 
 
 
+
+
   draw () {
     if (this.gameMode === 'loading') {
       this.loadingVideo.style.display = 'block';
@@ -148,14 +160,11 @@ class Game {
     }
 
     if (this.gameMode === 'start') {
-      // this.mario.addEventListeners();
       this.addEventListeners()
       this.gameMode = 'lobby';
     }
 
     if (this.gameMode === 'lobby') {
-      // this.gameMode = 'in-stage';
-      // if (this.selectorIndex == null) this.addEventListeners()
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
       this.ctx.drawImage(this.logoImg, (this.canvas.width / 2) - (CONFIGS.LOGO_WIDTH / 2), (this.canvas.height / 2) - (CONFIGS.LOGO_HEIGHT / 2))
       this.ctx.drawImage(this.selectorImg, this.selectorPosX, this.selectorPosY[this.selectorIndex])
@@ -163,13 +172,15 @@ class Game {
 
     if (this.gameMode === 'in-stage') {
 
-      // Render the game elements - //*! NEW 
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // Clear the canvas
-      this.ctx.drawImage(this.pipes, 0, 0);
-      this.stage.update(); // Render the stage
-      this.turtles.forEach(turtle => turtle.render()); // Render turtles
-      this.pow.update(); // Render POW or other elements
-      this.mario.update(); // Render Mario
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+      this.ctx.drawImage(this.pipes, 0, 0)
+      this.stage.update()
+      this.turtles.forEach(turtle => turtle.render())
+      this.pow.update()
+      this.mario.update()
+      for (let i = 0; i < this.playerLives; i++){
+        this.ctx.drawImage(this.liveImg, 12 + (CONFIGS.LIVE_WIDTH * i) , 20)
+      }
     }
   }
 

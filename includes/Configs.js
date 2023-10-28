@@ -9,6 +9,8 @@ const CONFIGS = {
   //LOGO SETTINGS
   LOGO_WIDTH: 414,
   LOGO_HEIGHT: 238,
+  LIVE_WIDTH: 20,
+  LIVE_HEIGHT: 12
 }
 
 export default CONFIGS

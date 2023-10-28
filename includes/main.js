@@ -12,6 +12,11 @@ powerBtn.addEventListener('click', e => {
     game.gameMode = 'loading';
     game.loadingVideo.style.display = 'block';
     game.start();
+    setInterval(() => {      
+      game.mainTheme.pause()
+      game.mainTheme.play()
+      game.mainTheme.volume = 0.8
+    }, 18000);
   }
 });
 
