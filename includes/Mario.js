@@ -15,6 +15,7 @@ class Mario {
       x: 0,
       y: 1,
     }
+    this.jumpSize = CONFIGS.MARIO_JUMP
     this.marioSprite = sprite
     this.animations = {
       'idleRight': [{ x: 0, y: 0 }],
@@ -76,11 +77,13 @@ class Mario {
             if (!this.pressedKeys.space.pressed && this.direction === 0) this.setAnimation('jumpLeft');
             if (!this.pressedKeys.space.pressed && this.direction === 1) this.setAnimation('jumpRight');
             this.pressedKeys.space.pressed = true;
-
+            this.jumpSize =  (this.checkJumpCollision() < CONFIGS.MARIO_JUMP) ? this.checkJumpCollision() : CONFIGS.MARIO_JUMP
             if (this.isOverFloor() && Math.round(this.position.y) >= 0) {
-              if (Math.round(this.position.y) - CONFIGS.MARIO_JUMP >= 0) {
-                this.velocity.y = -CONFIGS.MARIO_JUMP;
-              } else if (Math.round(Math.round(this.position.y)) - CONFIGS.MARIO_JUMP < 0) {
+              
+              
+              if (Math.round(this.position.y) - this.jumpSize >= 0) {
+                this.velocity.y = -this.jumpSize;
+              } else if (Math.round(Math.round(this.position.y)) - this.jumpSize < 0) {
                 alert('Cannot jump any higher');
               }
             }
@@ -153,10 +156,6 @@ class Mario {
 
   update() {
     this.draw()
-    // console.log(`
-    // Mario Y -> ${this.position.y}\n
-    // Mario X -> ${this.position.x}`);
-    // Gravity system (more or less)
     if (this.status == 'alive') {
       this.position.y += this.velocity.y
       this.position.x += this.velocity.x
@@ -178,6 +177,7 @@ class Mario {
         && !this.pressedKeys.space.pressed && this.isOverFloor() && 
         this.direction == 0 && this.status == 'alive'
         ) this.setAnimation('idleLeft')   
+    // console.log(this.checkJumpCollision())
   }
 
   killMario() {
@@ -217,6 +217,44 @@ class Mario {
       }
     }
   }
+
+  checkJumpCollision() {
+    const arrayColumns = this.marioCollisions[0].length;
+    const arrayRows = this.marioCollisions.length;
+    const arraySize = 8;
+    const arrayX = Math.floor((this.position.x + this.width / 2) / arraySize);
+    const arrayY = Math.floor(this.position.y / arraySize);
+  
+    if (arrayY < arrayRows && arrayX < arrayColumns && arrayX >= 0) {
+      let count = 0;
+      while (arrayY - count >= 0 && this.marioCollisions[arrayY - count][arrayX] == 0) {
+        count++;
+      }
+      // Limitar el salto para evitar que Mario suba fuera de la pantalla
+      if (count >= Math.floor(this.position.y / arraySize)) {
+        count = Math.floor(this.position.y / arraySize);
+      }
+      return count;
+    }
+    return 0;
+  }
+  
+
+  // checkJumpCollision() {
+  //   const arrayColumns = this.marioCollisions[0].length
+  //   const arrayRows = this.marioCollisions.length
+  //   const arraySize = 8 
+
+  //   const arrayX = Math.floor((this.position.x + this.width /2) / arraySize)
+  //   const arrayY = Math.floor(this.position.y / arraySize)
+  //   if (arrayY < arrayRows && arrayX < arrayColumns) {
+  //     let count = 0;
+  //     do {
+  //       count++
+  //     } while (this.marioCollisions[arrayY-count][arrayX] == 0);
+  //     return count
+  //   }
+  // }
 
   isOverFloor() {
     const arrayColumns = this.marioCollisions[0].length

@@ -36,11 +36,15 @@ class Pow {
       marioTop < powBottom && marioTop > powBottom - 10 && 
       marioRight - mario.width / 3 > powLeft && marioLeft + mario.width / 3 < powRight
       ) {
-      alert(this.uses)
+      // alert(this.uses)
       this.uses--
       this.currentAnimation--
       this.updateAnimation()
-      
+      this.turtles.forEach((turtle) => {
+        turtle.setStatus('flipped')
+        turtle.agro = false
+        // alert()
+      });
       if (this.uses === 0) {
         for (let i = 0; i < mario.marioCollisions.length; i++) {
           for (let j = 0; j < mario.marioCollisions[i].length; j++) {
@@ -48,6 +52,7 @@ class Pow {
           }          
         }
       }
+
     } 
   }
 

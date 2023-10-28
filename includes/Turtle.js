@@ -10,7 +10,8 @@ class Turtle extends Monster {
       direction,
       mario,
       turtles,
-      '../resources/sprites/enemies/turtle.png'
+      '../resources/sprites/enemies/turtle.png',
+      status
     )
     // this.position = position
     // this.canvas = canvas
@@ -91,7 +92,8 @@ class Turtle extends Monster {
         marioRight > turtleLeft && // Colisión horizontal
         marioLeft < turtleLeft && // Mario a la izquierda de la tortuga
         marioBottom > turtleTop && // Colisión vertical desde arriba
-        marioTop < turtleBottom // Colisión vertical desde abajo
+        marioTop < turtleBottom && // Colisión vertical desde abajo
+        this.agro
       ) {
         console.log('Golpe desde la derecha');
         mario.killMario()
@@ -101,9 +103,10 @@ class Turtle extends Monster {
         marioRight > turtleLeft && // Colisión horizontal
         marioLeft < turtleRight && // Mario a la izquierda de la tortuga
         marioBottom > turtleTop && // Colisión vertical desde arriba
-        marioTop < turtleBottom  // Colisión vertical desde abajo
+        marioTop < turtleBottom   // Colisión vertical desde abajo
       ) {
         console.log('Golpe en el caparazón');
+        this.agro = false
         if (this.statusPaused === 0 && mario.status == 'alive') this.setStatus('flipped');
       }
     } else if (this.direction === 1) { // Tortuga moviéndose hacia la derecha
@@ -112,7 +115,8 @@ class Turtle extends Monster {
         marioLeft < turtleRight && // Colisión horizontal
         marioRight > turtleRight && // Mario a la derecha de la tortuga
         marioBottom > turtleTop && // Colisión vertical desde arriba
-        marioTop < turtleBottom // Colisión vertical desde abajo
+        marioTop < turtleBottom && // Colisión vertical desde abajo
+        this.agro
       ) {
         console.log('Golpe desde la izquierda');
         mario.killMario()
@@ -126,6 +130,7 @@ class Turtle extends Monster {
         marioTop < turtleBottom  // Colisión vertical desde abajo
       ) {
         console.log('Golpe en el caparazón');
+        this.agro = false
         if (this.statusPaused === 0 && mario.status == 'alive') this.setStatus('flipped');
       }
     }
@@ -154,7 +159,7 @@ class Turtle extends Monster {
 /* Corregir logica de estados */
   setStatus(status) {
     this.status = status;
-    this.statusPaused = status === 'flipped' ? 1 : 0;
+    this.statusPaused = (status === 'flipped') ? 1 : 0;
     if (this.status === 'flipped') {
       this.velocity.x = 0;
       this.setAnimation(this.direction === 0 ? 'flippedLeft' : 'flippedRight');
@@ -162,9 +167,11 @@ class Turtle extends Monster {
         clearTimeout(this.flipStatus); // Detener el temporizador anterior si existe
       }
       this.flipStatus = setTimeout(() => {
-        this.setAnimation('shell');
-        this.status = 'dead';
-        this.velocity.x = 0; // Detener el movimiento en el eje X
+        this.setAnimation((this.direction == 0) ? 'runLeft' : 'runRight')
+        this.setStatus('normal')
+        this.velocity.x = 0.5        
+      //   this.status = 'dead';
+      //   this.velocity.x = 0; // Detener el movimiento en el eje X
       }, 10000);
     }
   }
