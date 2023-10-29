@@ -2,6 +2,7 @@ import CONFIGS from "./Configs.js";
 import Mario from "./Mario.js";
 import Pow from "./Pow.js";
 import Stages from "./Stages.js";
+import Turtle from "./Turtle.js";
 
 class Game {
   constructor(canvas) {
@@ -35,25 +36,6 @@ class Game {
     this.selectorIndex = 0
     this.mainTheme = document.querySelector('#background-music')
     this.fxSounds =  document.querySelector('#effect-sounds')
-    this.stage = new Stages(
-      this.canvas, 
-      this.ctx, {
-        x: 0,
-        y: 0,
-      }, 
-      this.mario, 
-      this.turtles
-    );
-    this.pow = new Pow(
-      this.canvas, 
-      this.ctx, 
-      {
-        x: 240,
-        y: 320
-      }, 
-      this.mario, 
-      this.turtles
-    );
     
     // ** GAME MODES **
     // *  off -> power off
@@ -66,8 +48,30 @@ class Game {
     this.keyboardType = 1  // 0 -> (A - D - W - S) -- 1 -> ARROWS (LEFT - RIGHT - UP - DOWN )
 
     this.liveImg = new Image()
-    this.liveImg.src = '../resources/sprites/ui/live.png'
+    this.liveImg.src = '../resources/sprites/ui/live.png'   
 
+    this.pow = new Pow(
+      this.canvas, 
+      this.ctx, 
+      {
+        x: 240,
+        y: 320
+      }, 
+      this.mario, 
+      this.turtles
+    );
+
+    
+    this.stage = new Stages(
+      this.canvas, 
+      this.ctx, {
+        x: 0,
+        y: 0,
+      }, 
+      this.mario, 
+      this.turtles,
+      this.pow
+    );
   }
 
   addEventListeners() {
@@ -77,7 +81,6 @@ class Game {
     window.addEventListener('keydown', this.keyDownListener);
 
     this.keyUpListener = (e) => {
-      console.log(e.code);
       if(e.code == 'KeyS' || e.code == 'ArrowDown') {
         this.fxSounds.src = '../resources/sounds/menu_down.mp3'
         this.fxSounds.pause()
@@ -124,52 +127,6 @@ class Game {
     window.removeEventListener('keyup', this.keyUpListener);
   }
 
-  createEnemies() {
-    let enemiesCount;
-    switch (stage.currentStage) {
-      case 1:
-        enemiesCount = 10
-        break;
-      case 2: 
-        enemiesCount = 15
-        break;
-      case 3:
-        enemiesCount = 20
-        break;
-      default:
-        break;
-    }
-
-    const generateEnemies = async () => {
-      const randomSpawn = Math.random()
-      let direction = (randomSpawn >= (1 - randomSpawn)) ? 0 : 1
-        const newTurtle = new Turtle(this.canvas, this.ctx, {
-          x: (direction == 0) ? this.canvas.width - 96 : 64,
-          y: 48
-        }, direction, this.mario, this.turtles, this.pow)
-        turtles.push(newTurtle)
-    }
-
-    const spawnDelay = 2000
-    const spawnInterval = 5000
-    let enemiesRemain = stage.enemiesCount[stage.currentStage]
-    const spawnEnemies = () => {
-      if (enemiesRemain > 0) {
-        generateEnemies()
-        console.log(enemiesRemain);
-        enemiesRemain--
-        setTimeout(() => {
-          spawnEnemies()
-        }, spawnInterval);
-      }
-    }
-    setTimeout(() => {
-      spawnEnemies()
-    }, spawnDelay);
-  }
-
-
-
   draw () {
     if (this.gameMode === 'loading') {
       this.loadingVideo.style.display = 'block';
@@ -190,14 +147,6 @@ class Game {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
       this.ctx.drawImage(this.logoImg, (this.canvas.width / 2) - (CONFIGS.LOGO_WIDTH / 2), (this.canvas.height / 2) - (CONFIGS.LOGO_HEIGHT / 2))
       this.ctx.drawImage(this.selectorImg, this.selectorPosX, this.selectorPosY[this.selectorIndex])
-      /* */
-      // this.ctx.fillStyle = '#f44'
-      // this.ctx.fillRect(
-      //   215,
-      //   200,
-      //   8,
-      //   8
-      // )
     }
 
     if (this.gameMode === 'in-stage') {
@@ -205,14 +154,13 @@ class Game {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
       this.ctx.drawImage(this.pipes, 0, 0)
       this.stage.update()
-      this.turtles.forEach(turtle => turtle.render())
+      this.turtles.forEach(turtle => turtle.update())
       this.pow.update()
       this.mario.update()
       for (let i = 0; i < this.mario.playerLives; i++){
         this.ctx.drawImage(this.liveImg, 12 + (CONFIGS.LIVE_WIDTH * i) , 20)
       }
       if (this.mario.elevatorIsActive) {
-        // console.log(this.mario.elevatorAnimations[this.mario.elevatorIndex]);
         this.ctx.drawImage(
           this.mario.elevatorSprite,
           this.mario.elevatorAnimations[this.mario.elevatorAnimationIndex].x,
@@ -225,8 +173,6 @@ class Game {
           CONFIGS.ELEVATOR_HEIGHT,
         )
       }
-
-
     }
   }
 
@@ -245,6 +191,14 @@ class Game {
       this.turtles.forEach(turtle => turtle.update());
       this.pow.update();
       this.mario.update();
+      if (this.stage.enemiesCount < 1) {
+        if (!this.enemiesBeingCreated) {
+          this.enemiesBeingCreated = true
+          this.stage.createEnemies()
+        }
+      } else {
+        this.enemiesBeingCreated = false
+      }
     }
   }
   
@@ -262,7 +216,6 @@ class Game {
         // this.addEventListeners()
         this.loadingVideo.style.display = 'none';
       });
-      this.createEnemies(); // You may want to call this here
     }
   }  
 

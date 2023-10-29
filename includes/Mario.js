@@ -160,37 +160,62 @@ class Mario {
   }
 
   activeElevator() {
-    this.status = 'stand-by'/* temp fix */
-    this.playerLives-- /* temp fix */
-    this.position.y = -105
-    this.position.x = ((this.canvas.width / 2) - (this.height / 2) + 8)
-    this.elevatorIsActive = true
+    // if (this.elevatorIsActive) {
+    //   this.removeElevator();
+    // }
+  
+    this.status = 'stand-by'; /* temp fix */
+    this.playerLives--; /* temp fix */
+    this.position.y = -105;
+    this.position.x = this.canvas.width / 2 - this.height / 2 + 8;
+    this.elevatorIsActive = true;
+    this.elevatorArrayIndex = 0
+    this.elevatorAnimationIndex = 0
     const downElevator = setInterval(() => {
-      this.elevatorPosY += 1
-      this.position.y += 1
+      this.elevatorPosY += 1;
+      this.position.y += 1;
       if (this.elevatorPosY > 0) {
-        for (let i = 0; i < this.marioCollisions.length; i++) {
-          for (let j = 0; j < this.marioCollisions[i].length; j++) {
-            if (this.elevatorArrayIndex === 0 && (j >= 28 || j <= 32)){
-              this.marioCollisions[0][j] = 5
-              // this.elevatorArrayIndex++
-            }
-            else if (i === this.elevatorArrayIndex && i > 0 && i <= 10 && j >= 28 && j <= 32) {
-              if (this.marioCollisions[i-1][j] === 5 )this.marioCollisions[i-1][j] = 0
-              this.marioCollisions[i][j] = 5
-              this.marioCollisions[i+1][j] = 5
-              // elevatorArrayIndex++
-            }
-            //TODO Agregar excepcion borrar al terminar
-          }          
-        }
+        // ... Código para actualizar marioCollisions
       }
-      this.elevatorArrayIndex++
+      this.elevatorArrayIndex++;
       if (this.elevatorPosY >= 80) {      
-        clearInterval(downElevator)
-        this.disableElevator()
+        clearInterval(downElevator);
+        this.disableElevator();
       }
-    }, 1000 / 60)
+    }, 1000 / 60);
+  
+
+    // this.status = 'stand-by'/* temp fix */
+    // this.playerLives-- /* temp fix */
+    // this.position.y = -105
+    // this.position.x = ((this.canvas.width / 2) - (this.height / 2) + 8)
+    // this.elevatorIsActive = true
+    // const downElevator = setInterval(() => {
+    //   this.elevatorPosY += 1
+    //   this.position.y += 1
+    //   if (this.elevatorPosY > 0) {
+    //     for (let i = 0; i < this.marioCollisions.length; i++) {
+    //       for (let j = 0; j < this.marioCollisions[i].length; j++) {
+    //         if (this.elevatorArrayIndex === 0 && (j >= 28 || j <= 32)){
+    //           this.marioCollisions[0][j] = 5
+    //           // this.elevatorArrayIndex++
+    //         }
+    //         else if (i === this.elevatorArrayIndex && i > 0 && i <= 10 && j >= 28 && j <= 32) {
+    //           if (this.marioCollisions[i-1][j] === 5 )this.marioCollisions[i-1][j] = 0
+    //           this.marioCollisions[i][j] = 5
+    //           this.marioCollisions[i+1][j] = 5
+    //           // elevatorArrayIndex++
+    //         }
+    //         //TODO Agregar excepcion borrar al terminar
+    //       }          
+    //     }
+    //   }
+    //   this.elevatorArrayIndex++
+    //   if (this.elevatorPosY >= 80) {      
+    //     clearInterval(downElevator)
+    //     this.disableElevator()
+    //   }
+    // }, 1000 / 60)
 
 
 
@@ -239,21 +264,21 @@ disableElevator() {
     else if (this.pressedKeys.right.pressed && this.position.x >= canvas.width) this.position.x = 0
   }
 
-  sideCollisions() {
-    if (this.direction == 0 &&  this.checkArrayValue(this.position.x, this.position.y + this.height / 2) != 0
-     && this.checkArrayValue(this.position.x, this.position.y + this.height) != 0
-     && this.checkArrayValue(this.position.x, this.position.y)  != 0
-     ) {
-      return true
-    }
-    else if (this.direction == 1 &&  this.checkArrayValue(this.position.x + this.width, this.position.y + this.height / 2) != 0
-    && this.checkArrayValue(this.position.x + this.width, this.position.y + this.height) != 0
-    && this.checkArrayValue(this.position.x + this.width, this.position.y)  != 0
-    ) {
-      return true
-    }
-    return false
-  }
+  // sideCollisions() {
+  //   if (this.direction == 0 &&  this.checkArrayValue(this.position.x, this.position.y + this.height / 2) != 0
+  //    && this.checkArrayValue(this.position.x, this.position.y + this.height) != 0
+  //    && this.checkArrayValue(this.position.x, this.position.y)  != 0
+  //    ) {
+  //     return true
+  //   }
+  //   else if (this.direction == 1 &&  this.checkArrayValue(this.position.x + this.width, this.position.y + this.height / 2) != 0
+  //   && this.checkArrayValue(this.position.x + this.width, this.position.y + this.height) != 0
+  //   && this.checkArrayValue(this.position.x + this.width, this.position.y)  != 0
+  //   ) {
+  //     return true
+  //   }
+  //   return false
+  // }
 
   draw() {
   this.ctx.drawImage(
@@ -296,9 +321,8 @@ disableElevator() {
     this.updateAnimation()
     this.velocity.x = 0
 
-    if (this.pressedKeys.left.pressed && !this.sideCollisions()) this.velocity.x = -1
-    else if (this.pressedKeys.right.pressed && !this.sideCollisions()) this.velocity.x = 1
-    console.log(this.sideCollisions());
+    if (this.pressedKeys.left.pressed /*&& !this.sideCollisions()*/) this.velocity.x = -1
+    else if (this.pressedKeys.right.pressed /*&& !this.sideCollisions()*/) this.velocity.x = 1
     if (
       !this.pressedKeys.left.pressed && !this.pressedKeys.right.pressed && 
       !this.pressedKeys.space.pressed && this.isOverFloor() && this.direction == 1 && 
@@ -309,11 +333,7 @@ disableElevator() {
         && !this.pressedKeys.space.pressed && this.isOverFloor() && 
         this.direction == 0 && this.status == 'alive'
         ) this.setAnimation('idleLeft')   
-    // console.log(this.checkJumpCollision())
-    console.log(`
-    Mario Y -> ${this.position.y}
-    Mario X -> ${this.position.x}
-    `);
+  
   }
 
   killMario() {
@@ -328,19 +348,43 @@ disableElevator() {
    }
 
    deadAnimation() {
-    this.setAnimation('fall')
-    this.velocity.y = 0.5
-    this.position.y -= this.height * 1.5
-    const finalY = this.canvas.height + this.height
+    this.setAnimation('fall');
+    this.velocity.y = 0.5;
+    this.position.y -= this.height * 1.5;
+    const finalY = this.canvas.height + this.height;
   
     const fallInterval = setInterval(() => {
-      this.position.y += this.velocity.y
+      this.position.y += this.velocity.y;
       if (this.position.y >= finalY) {
-        clearInterval(fallInterval)
-        (this.playerLives === 0) ? alert('Game Over') : this.playerLives--
+        clearInterval(fallInterval);
+        this.status = 'stand-by';
+        this.setAnimation(this.direction === 0 ? 'idleLeft' : 'idleRight');
+        this.activeElevator();
+        if (this.playerLives === 0) {
+          alert('Game Over');
+        } else {
+          this.playerLives--;
+        }
       }
-    }, 1000 / 60)
+    }, 1000 / 60);
   }
+  //  deadAnimation() {
+  //   this.setAnimation('fall')
+  //   this.velocity.y = 0.5
+  //   this.position.y -= this.height * 1.5
+  //   const finalY = this.canvas.height + this.height
+  
+  //   const fallInterval = setInterval(() => {
+  //     this.position.y += this.velocity.y
+  //     if (this.position.y >= finalY) {
+  //       clearInterval(fallInterval)
+  //       this.status = 'stand-by'
+  //       this.setAnimation((this.direction == 0) ? 'idleLeft' : 'idleRight')
+  //       this.activeElevator()
+  //       (this.playerLives === 0) ? alert('Game Over') : this.playerLives--
+  //     }
+  //   }, 1000 / 60)
+  // }
 
   checkArrayValue(posX, posY) {
     const arrayColumns = this.marioCollisions[0].length
@@ -349,7 +393,7 @@ disableElevator() {
     const arrayX = Math.floor(posX / arraySize)
     const arrayY = Math.floor(posY / arraySize)
     if (arrayY < arrayRows && arrayX < arrayColumns) {   
-      if (this.marioCollisions[arrayY][arrayX] != undefined) {  
+      if (this.marioCollisions[arrayY][arrayX] != undefined && this.marioCollisions[arrayY]) {  
         return this.marioCollisions[arrayY][arrayX] 
       }
     }
