@@ -13,14 +13,14 @@
     ☐ Move spawn enemies logic to stages object
 
 ☐ Game
-    ☐ Add lobby menu
-    ☐ Add keyboard inputs config
+    ☐ Add lobby menu @started(23-10-29 12:18)
+    ✔ Add keyboard inputs config @done(23-10-29 12:18)
     ☐ Add scores
-    ☐ Add lives
+    ✔ Add lives @done(23-10-29 12:18)
     ☐ Add clean stage event
     ☐ Add change stage event when all enemies are dead
-    ☐ Add Mario lost lifes event
-    ☐ Add Mario new appear after dead
+    ☐ Add Mario lost lifes event @started(23-10-29 12:21)
+    ☐ Add Mario new appear after dead @started(23-10-29 12:18)
     ✔ Add loading screen @done(23-10-28 21:17)
 
 AFTER FINISH ALPHA

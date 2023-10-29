@@ -17,8 +17,7 @@ class Game {
       this.ctx, 
       this.marioSprite, 
       this.selectorIndex, 
-      this.keyboardType,
-      this
+      this.keyboardType
       );
     this.pipes = new Image()
     this.pipes.src = '../resources/sprites/stages/pipes.png'
@@ -63,11 +62,9 @@ class Game {
     // *  in-stage -> in game
     // ?  start -> apply change to set lobby on
 
-    this.gameMode = 'off' 
+    this.gameMode = 'start' 
     this.keyboardType = 1  // 0 -> (A - D - W - S) -- 1 -> ARROWS (LEFT - RIGHT - UP - DOWN )
 
-
-    this.playerLives = 5
     this.liveImg = new Image()
     this.liveImg.src = '../resources/sprites/ui/live.png'
 
@@ -193,6 +190,14 @@ class Game {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
       this.ctx.drawImage(this.logoImg, (this.canvas.width / 2) - (CONFIGS.LOGO_WIDTH / 2), (this.canvas.height / 2) - (CONFIGS.LOGO_HEIGHT / 2))
       this.ctx.drawImage(this.selectorImg, this.selectorPosX, this.selectorPosY[this.selectorIndex])
+      /* */
+      // this.ctx.fillStyle = '#f44'
+      // this.ctx.fillRect(
+      //   215,
+      //   200,
+      //   8,
+      //   8
+      // )
     }
 
     if (this.gameMode === 'in-stage') {
@@ -203,15 +208,15 @@ class Game {
       this.turtles.forEach(turtle => turtle.render())
       this.pow.update()
       this.mario.update()
-      for (let i = 0; i < this.playerLives; i++){
+      for (let i = 0; i < this.mario.playerLives; i++){
         this.ctx.drawImage(this.liveImg, 12 + (CONFIGS.LIVE_WIDTH * i) , 20)
       }
       if (this.mario.elevatorIsActive) {
         // console.log(this.mario.elevatorAnimations[this.mario.elevatorIndex]);
         this.ctx.drawImage(
           this.mario.elevatorSprite,
-          this.mario.elevatorAnimations[this.mario.elevatorIndex].x,
-          this.mario.elevatorAnimations[this.mario.elevatorIndex].y,
+          this.mario.elevatorAnimations[this.mario.elevatorAnimationIndex].x,
+          this.mario.elevatorAnimations[this.mario.elevatorAnimationIndex].y,
           CONFIGS.ELEVATOR_WIDTH,
           CONFIGS.ELEVATOR_HEIGHT,
           ((this.canvas.width / 2) - (CONFIGS.ELEVATOR_WIDTH / 2)),
@@ -220,6 +225,8 @@ class Game {
           CONFIGS.ELEVATOR_HEIGHT,
         )
       }
+
+
     }
   }
 
