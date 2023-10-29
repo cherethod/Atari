@@ -52,70 +52,29 @@ class Mario {
       },
       space: {
         pressed: false
+      },
+      enter: {
+        pressed: false
       }
     }
     this.marioCollisions = marioCollisions
+
+    this.elevatorSprite = new Image()
+    this.elevatorSprite.src = '../resources/sprites/stages/elevator.png'
+    this.elevatorAnimations = {
+      0: {x: 0, y: 0},
+      1: {x: CONFIGS.ELEVATOR_WIDTH, y: 0},
+      2: {x: CONFIGS.ELEVATOR_WIDTH * 2, y: 0},
+    }
+    this.elevatorPosY = - 50
+    this.elevatorIndex = 0
+    this.elevatorCounter = 0
+    this.elevatorSpeed = 5
+    this.elevatorIsActive = true
+    // this.elevatorIsActive = false
   }
 
-  // addEventListeners() {
-  //   window.addEventListener('keydown', (e) => {
-  //     if (this.status === 'alive') {
-  //       switch (e.code) {
-  //         case 'KeyA':
-  //         case 'ArrowLeft':
-  //           if (!this.pressedKeys.left.pressed) this.setAnimation('runLeft');
-  //           this.pressedKeys.left.pressed = true;
-  //           this.direction = 0;
-  //           break;
-  //         case 'KeyD':
-  //         case 'ArrowRight':
-  //           if (!this.pressedKeys.right.pressed) this.setAnimation('runRight');
-  //           this.pressedKeys.right.pressed = true;
-  //           this.direction = 1;
-  //           break;
-  //         case 'Space':
-  //           if (!this.pressedKeys.space.pressed && this.direction === 0) this.setAnimation('jumpLeft');
-  //           if (!this.pressedKeys.space.pressed && this.direction === 1) this.setAnimation('jumpRight');
-  //           this.pressedKeys.space.pressed = true;
-  //           this.jumpSize =  (this.checkJumpCollision() < CONFIGS.MARIO_JUMP) ? this.checkJumpCollision() : CONFIGS.MARIO_JUMP
-  //           if (this.isOverFloor() && Math.round(this.position.y) >= 0) {
-              
-              
-  //             if (Math.round(this.position.y) - this.jumpSize >= 0) {
-  //               this.velocity.y = -this.jumpSize;
-  //             } else if (Math.round(Math.round(this.position.y)) - this.jumpSize < 0) {
-  //               alert('Cannot jump any higher');
-  //             }
-  //           }
-  //           break;
-  //         default: 
-  //           break;
-  //       }
-  //     }
-  //   });
-
-  //   window.addEventListener('keyup', (e) => {
-  //     if (this.status === 'alive') {
-  //       switch (e.code) {
-  //         case 'KeyA':
-  //         case 'ArrowLeft':
-  //           this.pressedKeys.left.pressed = false;
-  //           break;
-  //         case 'KeyD':
-  //         case 'ArrowRight':
-  //           this.pressedKeys.right.pressed = false;
-  //           break;
-  //         case 'Space':
-  //           this.pressedKeys.space.pressed = false;
-  //           break;
-  //         default:
-  //           break;
-  //       }
-  //     }
-  //   });
-  // }
-
-
+  
   addEventListeners() {
     this.keyDownListener = (e) => {
       if (this.status === 'alive') {
@@ -145,6 +104,10 @@ class Mario {
               }
             }
             break;
+            case 'Enter':
+              this.pressedKeys.enter.pressed = true  
+              this.activeElevator()           
+              break
           default: 
             break;
         }
@@ -167,6 +130,9 @@ class Mario {
           case 'Space':
             this.pressedKeys.space.pressed = false;
             break;
+          case 'Enter':
+            this.pressedKeys.enter.pressed = false
+            break
           default:
             break;
         }
@@ -181,7 +147,22 @@ class Mario {
     window.removeEventListener('keyup', this.keyUpListener);
   }
 
-
+  activeElevator() {
+    this.elevatorIsActive = true
+    const downElevator = setInterval(() => {
+      this.elevatorPosY += 1
+      if (this.elevatorPosY >= 80) {
+        clearInterval(downElevator)
+      }
+    }, 1000 / 60)
+    // const updateElevator = setInterval(() => {
+    //   this.elevatorIndex++
+    //   if (this.elevatorIndex > 2) {
+    //     this.elevatorIsActive = false
+    //     clearInterval(updateElevator)
+    //   }
+    // }, 4000);
+  }
 
   updateAnimation() {
     let animation = this.animations[this.currentAnimation]
@@ -305,24 +286,7 @@ class Mario {
       return count;
     }
     return 0;
-  }
-  
-
-  // checkJumpCollision() {
-  //   const arrayColumns = this.marioCollisions[0].length
-  //   const arrayRows = this.marioCollisions.length
-  //   const arraySize = 8 
-
-  //   const arrayX = Math.floor((this.position.x + this.width /2) / arraySize)
-  //   const arrayY = Math.floor(this.position.y / arraySize)
-  //   if (arrayY < arrayRows && arrayX < arrayColumns) {
-  //     let count = 0;
-  //     do {
-  //       count++
-  //     } while (this.marioCollisions[arrayY-count][arrayX] == 0);
-  //     return count
-  //   }
-  // }
+  }  
 
   isOverFloor() {
     const arrayColumns = this.marioCollisions[0].length

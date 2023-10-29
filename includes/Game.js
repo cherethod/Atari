@@ -12,7 +12,14 @@ class Game {
     this.canvas.height = CONFIGS.BOARD_HEIGHT
     this.marioSprite = new Image()
     this.marioSprite.src = '../resources/sprites/mario/mario.png'
-    this.mario = new Mario(this.canvas, this.ctx, this.marioSprite, this.selectorIndex, this.keyboardType);
+    this.mario = new Mario(
+      this.canvas, 
+      this.ctx, 
+      this.marioSprite, 
+      this.selectorIndex, 
+      this.keyboardType,
+      this
+      );
     this.pipes = new Image()
     this.pipes.src = '../resources/sprites/stages/pipes.png'
     this.turtles = []
@@ -29,22 +36,42 @@ class Game {
     this.selectorIndex = 0
     this.mainTheme = document.querySelector('#background-music')
     this.fxSounds =  document.querySelector('#effect-sounds')
-    this.stage = new Stages(this.canvas, this.ctx, {
-      x: 0,
-      y: 0,
-    }, this.mario, this.turtles);
-    this.pow = new Pow(this.canvas, this.ctx, {
-      x: 240,
-      y: 320
-    }, this.mario, this.turtles);
+    this.stage = new Stages(
+      this.canvas, 
+      this.ctx, {
+        x: 0,
+        y: 0,
+      }, 
+      this.mario, 
+      this.turtles
+    );
+    this.pow = new Pow(
+      this.canvas, 
+      this.ctx, 
+      {
+        x: 240,
+        y: 320
+      }, 
+      this.mario, 
+      this.turtles
+    );
     
-    this.gameMode = 'off'
+    // ** GAME MODES **
+    // *  off -> power off
+    // *  loading -> brand screen
+    // *  lobby -> main menu
+    // *  in-stage -> in game
+    // ?  start -> apply change to set lobby on
+
+    this.gameMode = 'off' 
     this.keyboardType = 1  // 0 -> (A - D - W - S) -- 1 -> ARROWS (LEFT - RIGHT - UP - DOWN )
+
+
     this.playerLives = 5
     this.liveImg = new Image()
     this.liveImg.src = '../resources/sprites/ui/live.png'
-  }
 
+  }
 
   addEventListeners() {
     this.keyDownListener = (e) => {
@@ -146,8 +173,6 @@ class Game {
 
 
 
-
-
   draw () {
     if (this.gameMode === 'loading') {
       this.loadingVideo.style.display = 'block';
@@ -180,6 +205,20 @@ class Game {
       this.mario.update()
       for (let i = 0; i < this.playerLives; i++){
         this.ctx.drawImage(this.liveImg, 12 + (CONFIGS.LIVE_WIDTH * i) , 20)
+      }
+      if (this.mario.elevatorIsActive) {
+        // console.log(this.mario.elevatorAnimations[this.mario.elevatorIndex]);
+        this.ctx.drawImage(
+          this.mario.elevatorSprite,
+          this.mario.elevatorAnimations[this.mario.elevatorIndex].x,
+          this.mario.elevatorAnimations[this.mario.elevatorIndex].y,
+          CONFIGS.ELEVATOR_WIDTH,
+          CONFIGS.ELEVATOR_HEIGHT,
+          ((this.canvas.width / 2) - (CONFIGS.ELEVATOR_WIDTH / 2)),
+          this.mario.elevatorPosY,
+          CONFIGS.ELEVATOR_WIDTH,
+          CONFIGS.ELEVATOR_HEIGHT,
+        )
       }
     }
   }

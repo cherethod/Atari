@@ -1,10 +1,12 @@
+import CONFIGS from "./Configs.js"
+
 class Stages {
   constructor(canvas, ctx, position, mario, turtles) {
     this.canvas = canvas
     this.ctx = ctx
     this.position = position
-    this.width = 512
-    this.height = 448
+    this.width = CONFIGS.BOARD_WIDTH
+    this.height = CONFIGS.BOARD_HEIGHT
     this.currentStage = 1
     this.stages = {
       1: '../resources/sprites/stages/stage1.png',
@@ -26,6 +28,7 @@ class Stages {
     this.turtles = turtles
     this.image = new Image()
     this.image.src = this.stages[this.currentStage]
+
   }
 
 
@@ -36,6 +39,8 @@ class Stages {
       this.position.x,
       this.position.y,
     )
+    
+
   }
 
   update () {
