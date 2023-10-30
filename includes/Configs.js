@@ -11,7 +11,7 @@ const CONFIGS = {
   LOGO_HEIGHT: 238,
   LIVE_WIDTH: 20,
   LIVE_HEIGHT: 12,
-  PLAYER_LIVES: 1
+  PLAYER_LIVES: 5
 }
 
 export default CONFIGS

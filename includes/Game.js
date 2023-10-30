@@ -236,8 +236,8 @@ class Game {
       `);
       if (this.marios[0].enemiesCount == this.stages[0].stageTotalEnemies[this.stages[0].currentStage] && this.stages[0].enemiesRemain[this.stages[0].currentStage] == 0) {
         console.log('stage clean')
-        this.marios[0].position.x = 240
-        this.marios[0].position.y = 360
+        this.marios[0].position.x = this.canvas.width - (this.marios[0].width /2)
+        this.marios[0].position.y = this.canvas.height - this.marios[0].height - CONFIGS.STAGE_FLOOR_HEIGHT
         this.marios[0].velocity.x = 0
         this.marios[0].velocity.y = 1
         this.marios[0].removeEventListeners()
