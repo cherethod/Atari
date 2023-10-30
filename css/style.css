@@ -1,3 +1,9 @@
+@font-face {
+  font-family: 'Mariofont';
+  src:  url('../resources/sprites/ui/font.woff'), 
+        url('../resources/sprites/ui/font.woff2');
+}
+
 * {
   padding: 0;
   margin: 0;

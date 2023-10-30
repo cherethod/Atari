@@ -1,9 +1,9 @@
 class Pow {
-  constructor(canvas, ctx, position, mario, turtles) {
+  constructor(canvas, ctx, position, marios, turtles) {
     this.position = position
     this.canvas = canvas
     this.ctx = ctx
-    this.mario = mario
+    this.marios = marios
     this.turtles = turtles
     this.width = 32
     this.height = 32
@@ -97,7 +97,7 @@ class Pow {
 
   update () {
     this.draw()
-    this.checkColision(this.mario)
+    this.checkColision(this.marios[0])
   }
 }
 

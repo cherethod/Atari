@@ -42,6 +42,15 @@ class Mario {
     this.direction = 1 // 1 right  -  0 left
     this.status = 'alive'
     this.playerLives = CONFIGS.PLAYER_LIVES
+    this.score = 0
+    this.points = {
+      0: 20, // Hit an enemy 
+      1: 800, // Kill an enemy
+      2: 400, // Get coin
+      3: 500  // Stage clear
+    }
+    this.enemiesCount = 0
+
     //  * Pressed side keys map
     this.pressedKeys = {
       left: {
@@ -57,6 +66,8 @@ class Mario {
         pressed: false
       }
     }
+    this.fxSounds =  document.querySelector('#effect-sounds')
+
     this.marioCollisions = marioCollisions
 
     this.elevatorSprite = new Image()
@@ -71,15 +82,9 @@ class Mario {
     this.elevatorCounter = 0
     this.elevatorSpeed = 5
     this.elevatorIsActive = false
-    this.elevatorArrayIndex = 0
+    this.elevatorArrayIndex = 0  
 
-    this.arrayColors = {
-      0: '#0004',
-      1: '#d449',
-      2: '#11f8',      
-      4: '#44d8'
-    }
-    this.devMode = false
+    this.jumpFX = new Audio('../resources/sounds/smb_jump-small.wav')
   }
 
   
@@ -110,6 +115,8 @@ class Mario {
             if (this.isOverFloor() && Math.round(this.position.y) >= 0) {
               if (Math.round(this.position.y) - this.jumpSize >= 0) {
                 this.velocity.y = -this.jumpSize;
+                
+                this.jumpFX.play()
               } else if (Math.round(Math.round(this.position.y)) - this.jumpSize < 0) {
                 alert('Cannot jump any higher');
               }
@@ -118,7 +125,7 @@ class Mario {
             case 'Enter':
               this.pressedKeys.enter.pressed = true  
               this.activeElevator()     
-              this.devMode = !this.devMode      
+              // this.devMode = !this.devMode      
               break
           default: 
             break;
@@ -159,69 +166,33 @@ class Mario {
     window.removeEventListener('keyup', this.keyUpListener);
   }
 
+  updateScore(index) {
+    this.score += this.points[index]
+  }
+
   activeElevator() {
-    // if (this.elevatorIsActive) {
-    //   this.removeElevator();
-    // }
-  
-    this.status = 'stand-by'; /* temp fix */
-    this.playerLives--; /* temp fix */
-    this.position.y = -105;
-    this.position.x = this.canvas.width / 2 - this.height / 2 + 8;
-    this.elevatorIsActive = true;
-    this.elevatorArrayIndex = 0
-    this.elevatorAnimationIndex = 0
-    const downElevator = setInterval(() => {
-      this.elevatorPosY += 1;
-      this.position.y += 1;
-      if (this.elevatorPosY > 0) {
-        // ... Código para actualizar marioCollisions
-      }
-      this.elevatorArrayIndex++;
-      if (this.elevatorPosY >= 80) {      
-        clearInterval(downElevator);
-        this.disableElevator();
-      }
-    }, 1000 / 60);
-  
 
-    // this.status = 'stand-by'/* temp fix */
-    // this.playerLives-- /* temp fix */
-    // this.position.y = -105
-    // this.position.x = ((this.canvas.width / 2) - (this.height / 2) + 8)
-    // this.elevatorIsActive = true
-    // const downElevator = setInterval(() => {
-    //   this.elevatorPosY += 1
-    //   this.position.y += 1
-    //   if (this.elevatorPosY > 0) {
-    //     for (let i = 0; i < this.marioCollisions.length; i++) {
-    //       for (let j = 0; j < this.marioCollisions[i].length; j++) {
-    //         if (this.elevatorArrayIndex === 0 && (j >= 28 || j <= 32)){
-    //           this.marioCollisions[0][j] = 5
-    //           // this.elevatorArrayIndex++
-    //         }
-    //         else if (i === this.elevatorArrayIndex && i > 0 && i <= 10 && j >= 28 && j <= 32) {
-    //           if (this.marioCollisions[i-1][j] === 5 )this.marioCollisions[i-1][j] = 0
-    //           this.marioCollisions[i][j] = 5
-    //           this.marioCollisions[i+1][j] = 5
-    //           // elevatorArrayIndex++
-    //         }
-    //         //TODO Agregar excepcion borrar al terminar
-    //       }          
-    //     }
-    //   }
-    //   this.elevatorArrayIndex++
-    //   if (this.elevatorPosY >= 80) {      
-    //     clearInterval(downElevator)
-    //     this.disableElevator()
-    //   }
-    // }, 1000 / 60)
-
-
-
-/* TEMP DEV MODE */
-    
-
+    if (this.status != 'game-over') {
+      this.status = 'stand-by'; /* temp fix */
+      this.playerLives--; /* temp fix */
+      this.position.y = -105;
+      this.position.x = this.canvas.width / 2 - this.height / 2 + 8;
+      this.elevatorIsActive = true;
+      this.elevatorArrayIndex = 0
+      this.elevatorAnimationIndex = 0
+      const downElevator = setInterval(() => {
+        this.elevatorPosY += 1;
+        this.position.y += 1;
+        if (this.elevatorPosY > 0) {
+          // ... Código para actualizar marioCollisions
+        }
+        this.elevatorArrayIndex++;
+        if (this.elevatorPosY >= 80) {      
+          clearInterval(downElevator);
+          this.disableElevator();
+        }
+      }, 1000 / 60);
+    }    
   }
 
 disableElevator() {
@@ -232,7 +203,9 @@ disableElevator() {
       if (this.elevatorAnimationIndex > 2) {
         this.elevatorIsActive = false  
         this.velocity.y = 1
+        this.elevatorPosY = -50
         // this.status = 'alive'  
+
         this.elevatorArrayIndex = 0
         clearInterval(updateElevator)
       }
@@ -264,34 +237,20 @@ disableElevator() {
     else if (this.pressedKeys.right.pressed && this.position.x >= canvas.width) this.position.x = 0
   }
 
-  // sideCollisions() {
-  //   if (this.direction == 0 &&  this.checkArrayValue(this.position.x, this.position.y + this.height / 2) != 0
-  //    && this.checkArrayValue(this.position.x, this.position.y + this.height) != 0
-  //    && this.checkArrayValue(this.position.x, this.position.y)  != 0
-  //    ) {
-  //     return true
-  //   }
-  //   else if (this.direction == 1 &&  this.checkArrayValue(this.position.x + this.width, this.position.y + this.height / 2) != 0
-  //   && this.checkArrayValue(this.position.x + this.width, this.position.y + this.height) != 0
-  //   && this.checkArrayValue(this.position.x + this.width, this.position.y)  != 0
-  //   ) {
-  //     return true
-  //   }
-  //   return false
-  // }
-
   draw() {
-  this.ctx.drawImage(
-      this.marioSprite, // This is the sprite
-      this.animations[this.currentAnimation][this.frameIndex].x, // Position X in the sprite
-      this.animations[this.currentAnimation][this.frameIndex].y, // Position Y in the sprite
-      this.width, // Sprite width
-      this.height, // Sprite height
-      this.position.x, // Position X in canvas
-      Math.round(this.position.y), // Position Y in canvas
-      this.width, // Ni puta idea por qué repetimos ancho
-      this.height // Ni puta idea por qué repetimos alto
-    )
+    // if (this.status != 'game-over') {
+      this.ctx.drawImage(
+        this.marioSprite, // This is the sprite
+        this.animations[this.currentAnimation][this.frameIndex].x, // Position X in the sprite
+        this.animations[this.currentAnimation][this.frameIndex].y, // Position Y in the sprite
+        this.width, // Sprite width
+        this.height, // Sprite height
+        this.position.x, // Position X in canvas
+        Math.round(this.position.y), // Position Y in canvas
+        this.width, // Ni puta idea por qué repetimos ancho
+        this.height // Ni puta idea por qué repetimos alto
+      )
+    // }
 
    if (this.devMode) {
     for (let i = 0; i < this.marioCollisions.length; i++){
@@ -351,40 +310,24 @@ disableElevator() {
     this.setAnimation('fall');
     this.velocity.y = 0.5;
     this.position.y -= this.height * 1.5;
+    if (this.playerLives == 0) {
+      this.status = 'game-over';
+    } 
     const finalY = this.canvas.height + this.height;
-  
     const fallInterval = setInterval(() => {
       this.position.y += this.velocity.y;
       if (this.position.y >= finalY) {
         clearInterval(fallInterval);
-        this.status = 'stand-by';
+        this.position.y = -105
+      
         this.setAnimation(this.direction === 0 ? 'idleLeft' : 'idleRight');
-        this.activeElevator();
-        if (this.playerLives === 0) {
-          alert('Game Over');
-        } else {
-          this.playerLives--;
+        if (this.playerLives > 0 && this.status != 'game-over') {
+          this.status = 'stand-by';
+          this.activeElevator()
         }
       }
     }, 1000 / 60);
   }
-  //  deadAnimation() {
-  //   this.setAnimation('fall')
-  //   this.velocity.y = 0.5
-  //   this.position.y -= this.height * 1.5
-  //   const finalY = this.canvas.height + this.height
-  
-  //   const fallInterval = setInterval(() => {
-  //     this.position.y += this.velocity.y
-  //     if (this.position.y >= finalY) {
-  //       clearInterval(fallInterval)
-  //       this.status = 'stand-by'
-  //       this.setAnimation((this.direction == 0) ? 'idleLeft' : 'idleRight')
-  //       this.activeElevator()
-  //       (this.playerLives === 0) ? alert('Game Over') : this.playerLives--
-  //     }
-  //   }, 1000 / 60)
-  // }
 
   checkArrayValue(posX, posY) {
     const arrayColumns = this.marioCollisions[0].length
@@ -439,7 +382,7 @@ disableElevator() {
       }
      }
     }
-
+    if (this.status == 'game-over') return false
     return true
   }
 }

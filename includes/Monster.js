@@ -2,18 +2,20 @@ import CONFIGS from "./Configs.js";
 import enemiesCollisions from "./EnemiesCollisions.js";
 
 class Monster {
-  constructor(canvas, ctx, position, direction, mario, turtles, pow, spriteSrc) {
+  constructor(canvas, ctx, position, direction, marios, turtles, pow, spriteSrc) {
     this.canvas = canvas
     this.ctx = ctx
     this.position = position    
     this.direction = direction;
-    this.mario = mario;
+    this.marios = marios;
     this.turtles = turtles;
     this.pow = pow
     this.sprite = new Image();
     this.sprite.src = spriteSrc;
     this.isAlive = true
     this.agro = false
+    this.hitFX = new Audio('../resources/sounds/smb_kick.wav')
+    this.marioDieFX = new Audio('../resources/sounds/smb_mariodie.wav')
   }
 
   updateAnimation() {
@@ -77,7 +79,7 @@ class Monster {
   }
 
   update () {
-    this.checkCollision(this.mario)
+    this.checkCollision(this.marios[0])
     this.updateAnimation()
     this.draw()    
     if (this.isAlive) {
