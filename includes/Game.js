@@ -221,13 +221,20 @@ class Game {
   }
 
   update() {
+  
     if (this.gameMode === 'in-stage') {
       this.stages[0].update();
       this.turtles.forEach(turtle => turtle.update());
       this.pow.update();
       this.marios[0].update();
-     
-      if (this.marios[0].enemiesCount === this.stages[0].stageTotalEnemies[this.stages[0].currentStage]) {
+      console.log(`
+      Enemies Count: ${this.marios[0].enemiesCount}\n
+      Enemies Total: ${this.stages[0].stageTotalEnemies[this.stages[0].currentStage]}\n
+      Enemies Remain: ${this.stages[0].enemiesRemain[this.stages[0].currentStage]}\n
+      Enemies Spawn: ${this.stages[0].enemiesSpawned}\n
+      
+      `);
+      if (this.marios[0].enemiesCount == this.stages[0].stageTotalEnemies[this.stages[0].currentStage] && this.stages[0].enemiesRemain[this.stages[0].currentStage] == 0) {
         console.log('stage clean')
         this.marios[0].position.x = 240
         this.marios[0].position.y = 360
@@ -235,11 +242,10 @@ class Game {
         this.marios[0].velocity.y = 1
         this.marios[0].removeEventListeners()
         this.marios[0].setAnimation('idleRight')
-        this.stageClearFX.load()
         this.stageClearFX.play()
         this.stageClearFX.addEventListener('ended', () => {
           this.marios[0].enemiesCount = 0
-          this.stages[0].updateStage()        
+          this.stages[0].updateStage()   
           this.enemiesBeingCreated = false
           this.marios[0].addEventListeners()
         })

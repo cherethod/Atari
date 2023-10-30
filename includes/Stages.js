@@ -20,14 +20,14 @@ class Stages {
       3: Math.floor(Math.random() * 4 + 1)
     }
     this.stageTotalEnemies = {
-      1: 10,
-      2: 15,
-      3: 20
+      1: 2,
+      2: 4,
+      3: 6
     }
     this.enemiesRemain = {
-      1: 10,
-      2: 15,
-      3: 20
+      1: 2,
+      2: 4,
+      3: 6
     }
     this.pow = pow
     this.marios = marios
@@ -38,7 +38,9 @@ class Stages {
   }
 
   updateStage() {
+    this.enemiesRemain[this.currentStage] = this.stageTotalEnemies[this.currentStage]
     this.image.src = this.stages[(this.currentStage == 3) ? 1 : this.currentStage + 1]
+    this.enemiesSpawned = 0
   }
   
   generateEnemies()  {
