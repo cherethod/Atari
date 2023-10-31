@@ -1,7 +1,7 @@
 import Monster from "./Monster.js";
 
 class Turtle extends Monster {
-  constructor(canvas, ctx, position, direction, mario, turtles, pow) {
+  constructor(canvas, ctx, position, direction, mario, turtles, pows) {
     super(
       canvas,
       ctx,
@@ -9,7 +9,7 @@ class Turtle extends Monster {
       direction,
       mario,
       turtles,
-      pow,
+      pows,
       '../resources/sprites/enemies/turtle.png'      
     )
     this.width = 32
@@ -154,7 +154,7 @@ class Turtle extends Monster {
         this.setStatus('normal')
         this.velocity.x = 0.5    
         this.agro = true    
-        this.pow.isInUse = false
+        // this.pows[0].isInUse = false
       }, 10000);
     }
   }

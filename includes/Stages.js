@@ -1,7 +1,8 @@
 import CONFIGS from "./Configs.js"
 import Turtle from "./Turtle.js"
+import Pow from "./Pow.js"
 class Stages {
-  constructor(canvas, ctx, position, marios, turtles, pow) {
+  constructor(canvas, ctx, position, marios, turtles) {
     this.canvas = canvas
     this.ctx = ctx
     this.position = position
@@ -29,7 +30,7 @@ class Stages {
       2: 15,
       3: 20
     }
-    this.pow = pow
+    this.pows = []
     this.marios = marios
     this.turtles = turtles
     this.enemiesCount = this.marios[0].enemiesCount
@@ -44,8 +45,22 @@ class Stages {
     this.enemiesCount = this.marios[0].enemiesCount
     this.image.src = this.stages[(this.currentStage == 3) ? 1 : this.currentStage + 1]
     this.enemiesSpawned = 0
-    this.pow.isInUse = false
-    this.pow.uses = 3
+    this.createPow()
+  }
+  
+  createPow() {
+    this.pows = []    
+    const newPow = new Pow(
+      this.canvas, 
+      this.ctx, 
+      {
+        x: 240,
+        y: 320
+      }, 
+      this.marios, 
+      this.turtles
+    );
+    this.pows = [newPow]
   }
   
   generateEnemies()  {
@@ -55,7 +70,7 @@ class Stages {
       const newTurtle = new Turtle(this.canvas, this.ctx, {
         x: (direction == 0) ? this.canvas.width - 96 : 64,
         y: 48
-      }, direction, this.marios, this.turtles, this.pow)
+      }, direction, this.marios, this.turtles, this.pows)
       this.turtles.push(newTurtle)
   }
 

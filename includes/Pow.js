@@ -53,6 +53,11 @@ class Pow {
             if (mario.marioCollisions[i][j] === 4) mario.marioCollisions[i][j] = 0
           }          
         }
+      } 
+      if (this.uses > 0 && this.isInUse) {
+        setInterval(() => {
+          this.isInUse = false
+        }, 2500);
       }
 
     } 

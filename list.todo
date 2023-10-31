@@ -19,12 +19,12 @@
     ✔ Add lives @done(23-10-29 12:18)
     ☐ Add clean stage event @started(23-10-30 16:08)
     ☐ Add change stage event when all enemies are dead @started(23-10-30 17:37)
-    ☐ Add Mario lost lifes event @started(23-10-29 12:21)
+    ✔ Add Mario lost lifes event @started(23-10-29 12:21) @done(23-10-31 09:40) @lasted(1d21h19m58s)
     ☐ Add Mario new appear after dead @started(23-10-29 12:18)
     ✔ Add loading screen @done(23-10-28 21:17)
 
 AFTER FINISH ALPHA
-☐ Fix spawn enemies delay
+☐ Fix spawn enemies delay @started(23-10-31 09:41)
 ☐ Fix turtle sprite (seems like a image was moved 1 pixel to the left)
 ☐ Fix collision issues (Pow, outside canvas, some platforms)
 ☐ Add other turtle detectector to change direction

@@ -1,6 +1,6 @@
 import CONFIGS from "./Configs.js";
 import Mario from "./Mario.js";
-import Pow from "./Pow.js";
+// import Pow from "./Pow.js";
 import Stages from "./Stages.js";
 
 class Game {
@@ -41,23 +41,15 @@ class Game {
     // *  in-stage -> in game
     // ?  start -> apply change to set lobby on
 
-    this.gameMode = 'off' 
+    this.gameMode = 'start' 
     this.keyboardType = 1  // 0 -> (A - D - W - S) -- 1 -> ARROWS (LEFT - RIGHT - UP - DOWN )
 
     this.liveImg = new Image()
     this.liveImg.src = '../resources/sprites/ui/live.png'   
 
-    this.pow = new Pow(
-      this.canvas, 
-      this.ctx, 
-      {
-        x: 240,
-        y: 320
-      }, 
-      this.marios, 
-      this.turtles
-    );
     this.stages = []   
+
+
   }
 
   createStage() {   
@@ -68,11 +60,12 @@ class Game {
       y: 0,
     }, 
     this.marios, 
-    this.turtles,
-    this.pow, 
+    this.turtles
   )
   this.stages = [newStage]
   newStage.enemiesRemain[newStage.currentStage] = newStage.stageTotalEnemies[newStage.currentStage];
+
+  newStage.createPow()
 }
 
   createMario() {
@@ -97,6 +90,7 @@ class Game {
         this.keyUpFX.play()
       }
       if (e.code == 'Enter') {      
+       if (this.selectorIndex === 0) {
         this.mainTheme.pause()
         this.gameStartFX.play()   
         this.gameStartFX.addEventListener('ended', () => {
@@ -104,6 +98,10 @@ class Game {
           this.mainTheme.play();
           this.marios[0].addEventListeners()
         });   
+       }
+       else if (this.selectorIndex === 1) {
+        alert("The score isn't implemented jet")
+       }
       }
     };
 
@@ -135,22 +133,24 @@ class Game {
         }
       }
       if (e.code == 'Enter') {
-        this.removeEventListeners()
-        this.createMario()
-        this.createStage()
-        this.gameMode = 'in-stage'
-        this.mainTheme.pause()
-        setInterval(() => {
-          // this.marios[0].addEventListeners()
-          if (this.stages[0] && this.stages[0].enemiesSpawned == 0) {
-            if (!this.enemiesBeingCreated) {
-              this.enemiesBeingCreated = true;
-              this.stages[0].createEnemies();
+        if (this.selectorIndex === 0) {
+          this.removeEventListeners()
+          this.createMario()
+          this.createStage()
+          this.gameMode = 'in-stage'
+          this.mainTheme.pause()
+          setInterval(() => {
+            // this.marios[0].addEventListeners()
+            if (this.stages[0] && this.stages[0].enemiesSpawned == 0) {
+              if (!this.enemiesBeingCreated) {
+                this.enemiesBeingCreated = true;
+                this.stages[0].createEnemies();
+              }
+            } else {
+              this.enemiesBeingCreated = false
             }
-          } else {
-            this.enemiesBeingCreated = false
-          }
-        }, 5000);
+          }, 5000);
+        }
       }
     };
 
@@ -183,6 +183,11 @@ class Game {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
       this.ctx.drawImage(this.logoImg, (this.canvas.width / 2) - (CONFIGS.LOGO_WIDTH / 2), (this.canvas.height / 2) - (CONFIGS.LOGO_HEIGHT / 2))
       this.ctx.drawImage(this.selectorImg, this.selectorPosX, this.selectorPosY[this.selectorIndex])
+      this.ctx.font = '8px Mariofont'
+      this.ctx.fillStyle = '#ffa000'
+      this.ctx.fillText('START NEW GAME', this.canvas.width/2 - 100, this.canvas.height / 2 + 87)
+      this.ctx.fillText('SCORES', this.canvas.width/2 - 100, this.canvas.height / 2 + 119)
+
     }
 
     if (this.gameMode === 'in-stage') {
@@ -191,7 +196,7 @@ class Game {
       this.stages[0].update()
       this.turtles.forEach(turtle => turtle.update())
       this.ctx.drawImage(this.pipes, 0, 0)
-      this.pow.update()
+      if (this.stages[0].pows[0] != undefined) this.stages[0].pows[0].update()
       this.marios[0].update()
       for (let i = 0; i < this.marios[0].playerLives; i++){
         this.ctx.drawImage(this.liveImg, 12 + (CONFIGS.LIVE_WIDTH * i) , 20)
@@ -225,15 +230,15 @@ class Game {
     if (this.gameMode === 'in-stage') {
       this.stages[0].update();
       this.turtles.forEach(turtle => turtle.update());
-      this.pow.update();
+      this.stages[0].pows[0].update();
       this.marios[0].update();
-      console.log(`
-      Enemies Count: ${this.marios[0].enemiesCount}\n
-      Enemies Total: ${this.stages[0].stageTotalEnemies[this.stages[0].currentStage]}\n
-      Enemies Remain: ${this.stages[0].enemiesRemain[this.stages[0].currentStage]}\n
-      Enemies Spawn: ${this.stages[0].enemiesSpawned}\n
+      // console.log(`
+      // Enemies Count: ${this.marios[0].enemiesCount}\n
+      // Enemies Total: ${this.stages[0].stageTotalEnemies[this.stages[0].currentStage]}\n
+      // Enemies Remain: ${this.stages[0].enemiesRemain[this.stages[0].currentStage]}\n
+      // Enemies Spawn: ${this.stages[0].enemiesSpawned}\n
       
-      `);
+      // `);
       if (this.marios[0].enemiesCount == this.stages[0].stageTotalEnemies[this.stages[0].currentStage] && this.stages[0].enemiesRemain[this.stages[0].currentStage] == 0) {
         console.log('stage clean')
         this.marios[0].position.x = this.canvas.width - (this.marios[0].width /2)
