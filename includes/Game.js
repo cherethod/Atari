@@ -41,7 +41,7 @@ class Game {
     // *  in-stage -> in game
     // ?  start -> apply change to set lobby on
 
-    this.gameMode = 'start' 
+    this.gameMode = 'off' 
     this.keyboardType = 1  // 0 -> (A - D - W - S) -- 1 -> ARROWS (LEFT - RIGHT - UP - DOWN )
 
     this.liveImg = new Image()
