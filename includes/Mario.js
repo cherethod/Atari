@@ -61,10 +61,10 @@ class Mario {
       },
       space: {
         pressed: false
-      },
+      }/*,
       enter: {
         pressed: false
-      }
+      }*/
     }
     this.fxSounds =  document.querySelector('#effect-sounds')
 
@@ -122,11 +122,11 @@ class Mario {
               }
             }
             break;
-            case 'Enter':
+           /* case 'Enter':
               this.pressedKeys.enter.pressed = true  
               this.activeElevator()     
               // this.devMode = !this.devMode      
-              break
+              break*/
           default: 
             break;
         }
@@ -149,9 +149,9 @@ class Mario {
           case 'Space':
             this.pressedKeys.space.pressed = false;
             break;
-          case 'Enter':
+         /* case 'Enter':
             this.pressedKeys.enter.pressed = false
-            break
+            break*/
           default:
             break;
         }
